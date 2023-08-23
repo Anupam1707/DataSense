@@ -12,15 +12,19 @@ db_config = {
         'user': user,
         'password': password,
         'host': host,
+        'auth_plugin':'mysql_native_password'
 }
 # Establish a connection to the MySQL server
 def connect_to_database():
     try:
-        conn = mysql.connector.connect(**db_config)
-        return conn
+        conn = mysql.connector.connect(**db_config, database = "datasense")
+        if conn is not None:
+            return conn  # Return the connection without executing "USE datasense"
     except mysql.connector.Error as err:
         print("Error:", err)
-        return None
+    return None
+    
+conn = connect_to_database()
 
 def save_excel(table):
     conn = connect_to_database()
@@ -35,26 +39,21 @@ def save_excel(table):
         except UserWarning:
             pass
 
-def close_connection(conn):
+def close_connection():
     if conn is not None:
         conn.close()
+        
 # Execute a SQL query and return the result
-def execute_query(*query):
-    conn = connect_to_database()
+def execute_query(query):
     if conn is not None:
+        cursor = conn.cursor()
         try:
-            cursor = conn.cursor()
-            cursor.execute("USE datasense")
+            cursor.execute(query)
             r = cursor.fetchall()
             conn.commit()
-            cursor.execute(*query)
-            result = cursor.fetchall()
-            close_connection(conn)
-            return result
+            return r
         except mysql.connector.Error as err:
             print("Error:", err)
-            close_connection(conn)
-            return None
 
 # Simple analytical queries
 def get_product_categories():

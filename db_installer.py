@@ -21,6 +21,7 @@ db_config = {
     'user': user,
     'password': password,
     'host': host,
+    'auth_plugin':'mysql_native_password'
 }
 
 # SQL statements to be executed
@@ -132,8 +133,7 @@ try:
     time.sleep(2)
         
 except mysql.connector.Error as err:
-    os.system("pip install mysql-connector-python --upgrade")
-    print("please restart")
+    print(err)
 
 finally:
     print("Setup Complete")

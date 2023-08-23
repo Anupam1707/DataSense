@@ -38,7 +38,67 @@ def home_window():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
             home.destroy()
-            e_connection()
+            ()
+    
+    def switchg():
+        home.destroy()
+        graph_window()
+    def switchn():
+        home.destroy()
+        numeric_window()
+    def switche():
+        home.destroy()
+        export_window()
+    def switcha():
+        home.destroy()
+        add_window()
+    def switchu():
+        home.destroy()
+        update_window()
+    def switchdel():
+        home.destroy()
+        delete_window()
+    def logout():
+        home.destroy()
+        login_window()
+        
+    Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
+    Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
+    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
+    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
+    Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=20)
+    Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=20)
+    Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=20)
+    Button(home, text = "Help", font = "Arial 20 bold",bg = "white", command=switchn).pack(pady=20)
+    Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
+    
+    home.mainloop()
+
+def home_window():
+    add = Tk()
+    
+    screen_width = home.winfo_screenwidth()
+    screen_height = home.winfo_screenheight()
+##    x = (screen_width - 1280) // 2
+##    y = (screen_height - 720) // 2
+
+    home.title("Add/Insert Data")
+    home.attributes("-fullscreen",True)
+    home.overrideredirect(True)
+
+    img = Image.open("images/home.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x = -2, y = -2)
+    
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            home.destroy()
+            ()
     
     def switchg():
         home.destroy()
