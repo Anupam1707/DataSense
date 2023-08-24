@@ -26,4 +26,4 @@ import mysql.connector as sqlcon
 from sql_scripts import *
 from visuals import *
 from windows import *
-login_window()
+welcome_window()
