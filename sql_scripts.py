@@ -49,9 +49,12 @@ def execute_query(query):
         cursor = conn.cursor()
         try:
             cursor.execute(query)
-            r = cursor.fetchall()
-            conn.commit()
-            return r
+            if query.strip().lower().startswith('insert'):
+                conn.commit()  # For INSERT queries, commit the transaction
+            else:
+                r = cursor.fetchall()  # For other queries, fetch the results
+                conn.commit()
+                return r
         except mysql.connector.Error as err:
             print("Error:", err)
 
