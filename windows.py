@@ -167,9 +167,38 @@ def add_window():
         add.destroy()
         home_window()
 
-    def cust():
+    def new_cust():
+        def submit_data():
+            r = execute_query("select customerid from customers")
+            idl = r[-1][0]
+            print(idl, idl+1)
+            q = f"insert into customers values ({idl+1}, '{firstname.get()}', '{lastname.get()}', '{email.get()}', '{address.get()}'"
+            resp = execute_query(q)
+            
         c.pack_forget()
-
+        o.pack_forget()
+        fn = Label(add, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        fn.pack(padx = 30, pady = 20)
+        firstname = Entry(add, font = "Arial 20 bold")
+        firstname.pack(padx = 0, pady= 0)
+        ln = Label(add, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ln.pack(padx = 30, pady = 20)
+        lastname = Entry(add, font = "Arial 20 bold")
+        lastname.pack(padx = 0,pady= 0)
+        em = Label(add, text="Email Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        em.pack(padx = 30, pady = 20)
+        email = Entry(add, font = "Arial 20 bold")
+        email.pack(padx = 0,pady= 0)
+        ad = Label(add, text="Home Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ad.pack(padx = 30, pady = 20)
+        address = Entry(add, font = "Arial 20 bold")
+        address.pack(padx = 0,pady= 0)
+        Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data).pack(pady=5)
+        
+    def new_order():
+        c.pack_forget()
+        o.pack_forget()
+        
     img = Image.open("images/add.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
     test = ImageTk.PhotoImage(img)
@@ -182,8 +211,10 @@ def add_window():
         if result == True:
             add.destroy()
     Label(add, text="Add/Insert Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
-    c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = cust)
-    c.pack(pady=50)
+    c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = new_cust)
+    c.pack(pady=40)
+    o = Button(add, text = "New Order", font = "Arial 20 bold", bg = "white", command = new_order)
+    o.pack(pady=1)
     Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")   
     add.mainloop()
     
