@@ -156,6 +156,37 @@ def login_window():
     sign = Button(login, text= "Sign UP Instead", font = "Arial 20 bold", bg="skyblue", command=switchs).pack(pady = 30)
     login.mainloop()
 
+def add_window():
+    add = Tk()
+    screen_width = add.winfo_screenwidth()
+    screen_height = add.winfo_screenheight()
+    add.title("Add/Insert data")
+    add.attributes("-fullscreen", True)
+
+    def switchh():
+        add.destroy()
+        home_window()
+
+    def cust():
+        c.pack_forget()
+
+    img = Image.open("images/add.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x=-2, y=-2)
+
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            add.destroy()
+    Label(add, text="Add/Insert Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
+    c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = cust)
+    c.pack(pady=50)
+    Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")   
+    add.mainloop()
+    
 def welcome_window():
     welcome = Tk()
     screen_width = welcome.winfo_screenwidth()
@@ -169,14 +200,22 @@ def welcome_window():
     bk = Label(image=test)
     bk.image = test
     bk.place(x=-2, y=-2)
+
+    def switchl():
+        welcome.destroy()
+        login_window()
+    
+    def switchs():
+        welcome.destroy()
+        signup_window()
     
     def quit():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
             welcome.destroy()
     Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady=50)
-    Button(welcome, text = "Create Account",font = "Arial 40 bold", command=signup_window).pack(pady=10)
-    Button(welcome, text = "Login",font = "Arial 40 bold", command=login_window).pack(pady=10)
+    Button(welcome, text = "Create Account",font = "Arial 40 bold", command=switchs).pack(pady=10)
+    Button(welcome, text = "Login",font = "Arial 40 bold", command=switchl).pack(pady=10)
     
 def numeric_window():
     numeric = Tk()
