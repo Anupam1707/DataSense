@@ -210,8 +210,48 @@ def add_window():
         sub.pack(pady=5)
         
     def new_order():
+        def submit_data():
+            customers = [cust[0] for cust in execute_query("select firstname from customers")]
+            print(customers)
+            r = execute_query("select orderid from orders")
+            idl = r[-1][0]
+            print(idl+1, firstname.get(), lastname.get(), email.get(), address.get())
+            q = "insert into customers values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
+            resp = execute_query(q)
+
+            fn.pack_forget()
+            firstname.pack_forget()
+            ln.pack_forget()
+            lastname.pack_forget()
+            em.pack_forget()
+            email.pack_forget()
+            ad.pack_forget()
+            address.pack_forget()
+            sub.pack_forget()
+
+            success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+            
         c.pack_forget()
         o.pack_forget()
+        fn = Label(add, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        fn.pack(padx = 30, pady = 20)
+        firstname = Entry(add, font = "Arial 20 bold")
+        firstname.pack(padx = 0, pady= 0)
+        ln = Label(add, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ln.pack(padx = 30, pady = 20)
+        lastname = Entry(add, font = "Arial 20 bold")
+        lastname.pack(padx = 0,pady= 0)
+        em = Label(add, text="Email Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        em.pack(padx = 30, pady = 20)
+        email = Entry(add, font = "Arial 20 bold")
+        email.pack(padx = 0,pady= 0)
+        ad = Label(add, text="Home Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ad.pack(padx = 30, pady = 20)
+        address = Entry(add, font = "Arial 20 bold")
+        address.pack(padx = 0,pady= 0)
+        sub = Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
         
     img = Image.open("images/add.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
