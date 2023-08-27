@@ -5,8 +5,9 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
+import time
 
-
+maintain_label = False
 #Function to give values of the input to the graph plotter to plot the graph
 def pt():
     if l1v.get() != None and l2v.get() != None and typ.get() == "vertical bar graph":
@@ -16,8 +17,9 @@ def pt():
 
 #Function to create a Home Page
 def home_window():
+    global maintain_label
+    maintain_label = False
     home = Tk()
-    
     screen_width = home.winfo_screenwidth()
     screen_height = home.winfo_screenheight()
 ##    x = (screen_width - 1280) // 2
@@ -34,6 +36,12 @@ def home_window():
     bk.image = test
     bk.place(x = -2, y = -2)
     
+    def maintain():
+        global l, maintain_label
+        if not maintain_label:
+            l = Label(home, text="Feature Under Maintenance", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            maintain_label = True
     def quit():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
@@ -69,7 +77,7 @@ def home_window():
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=20)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=20)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=20)
-    Button(home, text = "Help", font = "Arial 20 bold",bg = "white", command=switchn).pack(pady=20)
+    Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=maintain).pack(pady=20)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
     
@@ -77,6 +85,8 @@ def home_window():
     
 #Function to create a Signup Page
 def signup_window():
+    global maintain_label
+    maintain_label = False
     signup = Tk()
     signup.title("Login")
     signup.attributes('-fullscreen', True)
@@ -109,6 +119,8 @@ def signup_window():
  
 #Function to create a Login Page
 def login_window():
+    global maintain_label
+    maintain_label = False
     usr = ""
     def switch():
         login.destroy()
@@ -157,17 +169,31 @@ def login_window():
     login.mainloop()
 
 def add_window():
+    global maintain_label
+    maintain_label = False
     add = Tk()
     screen_width = add.winfo_screenwidth()
     screen_height = add.winfo_screenheight()
     add.title("Add/Insert data")
     add.attributes("-fullscreen", True)
 
+    def maintain():
+        global l, maintain_label
+        if not maintain_label:
+            l = Label(add, text="Feature Under Maintenance", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            maintain_label = True
+
+    def ad():
+        add.destroy()
+        add_window()
     def switchh():
         add.destroy()
         home_window()
 
     def new_cust():
+        global maintain_label
+        maintain_label = False
         def submit_data():
             r = execute_query("select customerid from customers")
             idl = r[-1][0]
@@ -189,7 +215,12 @@ def add_window():
             success.pack(anchor = CENTER)
             
         c.pack_forget()
+        p.pack_forget()
         o.pack_forget()
+        try:
+            l.pack_forget()
+        except:
+            pass
         fn = Label(add, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         fn.pack(padx = 30, pady = 20)
         firstname = Entry(add, font = "Arial 20 bold")
@@ -210,23 +241,38 @@ def add_window():
         sub.pack(pady=5)
         
     def new_order():
+        global maintain_label
+        maintain_label = False
+        cust = StringVar()
+        cust.set("Customer")
+        prod = StringVar()
+        prod.set("Product")
+        
+        customers = [ct[0] for ct in execute_query("select firstname from customers")]
+        products = [pd[0] for pd in execute_query("select productname from products")]
+        print(customers)
+        print(products)
+        
         def submit_data():
-            customers = [cust[0] for cust in execute_query("select firstname from customers")]
-            print(customers)
-            r = execute_query("select orderid from orders")
-            idl = r[-1][0]
-            print(idl+1, firstname.get(), lastname.get(), email.get(), address.get())
-            q = "insert into customers values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
+            ors = execute_query("select orderid from orders")
+            lor = ors[-1][0]
+            ords = execute_query("select orderdetailid from orderdetails")
+            lord = ords[-1][0]
+            print(lor, lord)
+            print("orders")
+            print(lor+1, customers.index(cust.get())+1, date.get(), amt.get())
+            q = "insert into orders values ({}, {}, '{}', {})".format(lor+1, customers.index(cust.get())+1, date.get(), amt.get())
+##            q = "insert into orders values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
             resp = execute_query(q)
 
-            fn.pack_forget()
-            firstname.pack_forget()
-            ln.pack_forget()
-            lastname.pack_forget()
-            em.pack_forget()
-            email.pack_forget()
+            cn.pack_forget()
+            customer.pack_forget()
+            pd.pack_forget()
+            product.pack_forget()
+            dt.pack_forget()
+            date.pack_forget()
             ad.pack_forget()
-            address.pack_forget()
+            amount.pack_forget()
             sub.pack_forget()
 
             success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
@@ -234,22 +280,24 @@ def add_window():
             
         c.pack_forget()
         o.pack_forget()
-        fn = Label(add, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
-        fn.pack(padx = 30, pady = 20)
-        firstname = Entry(add, font = "Arial 20 bold")
-        firstname.pack(padx = 0, pady= 0)
-        ln = Label(add, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
-        ln.pack(padx = 30, pady = 20)
-        lastname = Entry(add, font = "Arial 20 bold")
-        lastname.pack(padx = 0,pady= 0)
-        em = Label(add, text="Email Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
-        em.pack(padx = 30, pady = 20)
-        email = Entry(add, font = "Arial 20 bold")
-        email.pack(padx = 0,pady= 0)
-        ad = Label(add, text="Home Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        cn = Label(add, text="Customer Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        cn.pack(padx = 30, pady = 20)
+        customer = OptionMenu(add, cust, *customers)
+        customer.config(font=("Arial", 22))
+        customer.pack(padx = 0, pady= 0)
+        pd = Label(add, text="Product Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        pd.pack(padx = 30, pady = 20)
+        product = OptionMenu(add, prod, *products)
+        product.config(font=("Arial", 22))
+        product.pack(padx = 0,pady= 0)
+        dt = Label(add, text="Date", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        dt.pack(padx = 30, pady = 20)
+        date = Entry(add, font = "Arial 20 bold")
+        date.pack(padx = 0,pady= 0)
+        ad = Label(add, text="Price", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         ad.pack(padx = 30, pady = 20)
-        address = Entry(add, font = "Arial 20 bold")
-        address.pack(padx = 0,pady= 0)
+        amount = Entry(add, font = "Arial 20 bold")
+        amount.pack(padx = 0,pady= 0)
         sub = Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
         sub.pack(pady=5)
         
@@ -267,9 +315,13 @@ def add_window():
     Label(add, text="Add/Insert Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
     c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = new_cust)
     c.pack(pady=40)
+    p = Button(add, text = "New Product", font = "Arial 20 bold", bg = "white", command = maintain)
+    p.pack(pady=40)
     o = Button(add, text = "New Order", font = "Arial 20 bold", bg = "white", command = new_order)
     o.pack(pady=1)
-    Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")   
+    Button(add, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
+    Button(add, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     add.mainloop()
     
 def welcome_window():
