@@ -68,7 +68,7 @@ def home_window():
         delete_window()
     def logout():
         home.destroy()
-        login_window()
+        welcome_window()
         
     Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
@@ -351,8 +351,9 @@ def welcome_window():
         if result == True:
             welcome.destroy()
     Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady=50)
-    Button(welcome, text = "Create Account",font = "Arial 30 bold", command=switchs).pack(side=LEFT, anchor="n", padx = 350, pady = 50)
-    Button(welcome, text = "Login",font = "Arial 30 bold", command=switchl).pack(side=RIGHT, anchor="n", pady = 50)
+    Button(welcome, text = "Create Account",font = "Arial 30 bold", command=switchs).pack(side = LEFT, padx = 210, pady=60, anchor="sw")
+    Label(welcome, text = "or", font = "Arial 40 italic",bg = "#0d1133", fg = "white").pack(side= BOTTOM, pady=70, anchor="sw")
+    Button(welcome, text = "Login",font = "Arial 30 bold", command=switchl).pack(side = LEFT, padx = 50, pady=60, anchor="sw")
     
 def numeric_window():
     numeric = Tk()
