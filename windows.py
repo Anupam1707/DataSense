@@ -194,7 +194,53 @@ def add_window():
     def switchh():
         add.destroy()
         home_window()
+        
+    def new_prod():
+        global maintain_label
+        maintain_label = False
+        categ = StringVar()
+        categ.set("Category")
+        cats = [c[0] for c in execute_query("select distinct(category) from products")]
+        def submit_data():
+            r = execute_query("select productid from products")
+            idl = r[-1][0]
+            print(idl+1, prodname.get(), categ.get(), amt.get())
+            q = "insert into products values ({}, '{}', '{}', {})".format(idl+1, prodname.get(), categ.get(), amt.get())
+            resp = execute_query(q)
 
+            pn.pack_forget()
+            prodname.pack_forget()
+            cat.pack_forget()
+            category.pack_forget()
+            at.pack_forget()
+            amt.pack_forget()
+            sub.pack_forget()
+            success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+
+        c.pack_forget()
+        p.pack_forget()
+        o.pack_forget()
+        try:
+            l.pack_forget()
+        except:
+            pass
+        pn = Label(add, text="Product Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        pn.pack(padx = 30, pady = 20)
+        prodname = Entry(add, font = "Arial 20 bold")
+        prodname.pack(padx = 0, pady= 0)
+        cat = Label(add, text="Category", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        cat.pack(padx = 30, pady = 20)
+        category = OptionMenu(add, categ, *cats)
+        category.config(font=("Arial", 22))
+        category.pack(padx = 0,pady= 0)
+        at = Label(add, text="Price", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        at.pack(padx = 30, pady = 20)
+        amt = Entry(add, font = "Arial 20 bold")
+        amt.pack(padx = 0,pady= 0)
+        sub = Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
+            
     def new_cust():
         global maintain_label
         maintain_label = False
@@ -277,7 +323,6 @@ def add_window():
             q.pack_forget()
             qt.pack_forget()
             sub.pack_forget()
-
             success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
             success.pack(anchor = CENTER)
             
@@ -319,7 +364,7 @@ def add_window():
     Label(add, text="Add/Insert Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
     c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = new_cust)
     c.pack(pady=40)
-    p = Button(add, text = "New Product", font = "Arial 20 bold", bg = "white", command = maintain)
+    p = Button(add, text = "New Product", font = "Arial 20 bold", bg = "white", command = new_prod)
     p.pack(pady=40)
     o = Button(add, text = "New Order", font = "Arial 20 bold", bg = "white", command = new_order)
     o.pack(pady=1)
