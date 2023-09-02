@@ -254,6 +254,7 @@ def add_window():
         
         customers = [ct[0] for ct in execute_query("select firstname from customers")]
         products = [pd[0] for pd in execute_query("select productname from products")]
+        prodprice = [pp for pp in execute_query("select productid, price from products")]
         print(customers)
         print(products)
         
@@ -262,27 +263,26 @@ def add_window():
             lor = ors[-1][0]
             ords = execute_query("select orderdetailid from orderdetails")
             lord = ords[-1][0]
-            print(lor, lord)
-            print("orders")
-            print(lor+1, customers.index(cust.get())+1, date.get(), amt.get())
-            q = "insert into orders values ({}, {}, '{}', {})".format(lor+1, customers.index(cust.get())+1, date.get(), amt.get())
-##            q = "insert into orders values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
+            stt = float(prodprice[products.index(prod.get()) ][1]) * float(qt.get())
+            q = "insert into orders values ({}, {}, '{}', {})".format(lor+1, (customers.index(cust.get())+1), date.get(), stt)
             resp = execute_query(q)
-
+            q = "insert into orderdetails values ({}, {}, {}, {}, {})".format(lord + 1, lor+1, (products.index(prod.get())+1), qt.get(), stt)
+            resp = execute_query(q)
             cn.pack_forget()
             customer.pack_forget()
             pd.pack_forget()
             product.pack_forget()
             dt.pack_forget()
             date.pack_forget()
-            ad.pack_forget()
-            amount.pack_forget()
+            q.pack_forget()
+            qt.pack_forget()
             sub.pack_forget()
 
             success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
             success.pack(anchor = CENTER)
             
         c.pack_forget()
+        p.pack_forget()
         o.pack_forget()
         cn = Label(add, text="Customer Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         cn.pack(padx = 30, pady = 20)
@@ -294,14 +294,14 @@ def add_window():
         product = OptionMenu(add, prod, *products)
         product.config(font=("Arial", 22))
         product.pack(padx = 0,pady= 0)
+        q = Label(add, text="Quantity", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        q.pack(padx = 30, pady = 20)
+        qt = Entry(add, font = "Arial 20 bold")
+        qt.pack(padx = 30, pady = 20)
         dt = Label(add, text="Date", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         dt.pack(padx = 30, pady = 20)
         date = Entry(add, font = "Arial 20 bold")
         date.pack(padx = 0,pady= 0)
-        ad = Label(add, text="Price", font = "Arial 20 bold",bg = "#090c39", fg = "white")
-        ad.pack(padx = 30, pady = 20)
-        amount = Entry(add, font = "Arial 20 bold")
-        amount.pack(padx = 0,pady= 0)
         sub = Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
         sub.pack(pady=5)
         
