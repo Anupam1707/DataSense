@@ -107,7 +107,11 @@ def signup_window():
     password_entry.pack(side = TOP)
            
     def signup_button():
-        q = f"insert into users (username, password) values ('{username_entry.get()}', '{password_entry.get()}')"
+        u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
+        p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
+        print(u)
+        print(p)
+        q = f"insert into users (username, password) values ('{u}', '{p}')"
         r = execute_query(q)
         signup.destroy()
         home_window()
@@ -149,12 +153,12 @@ def login_window():
         usr = 0
         response = execute_query("select * from users")
         for i in range(len(response)):
-            if username_entry.get() == response[i][0]:
+            if username_entry.get() == SecuriPy.Text.decrypt(response[i][0], "datasense"):
                 usr = i
                 break
             else:
                 usr = -1
-        if password_entry.get() == response[usr][1]:
+        if password_entry.get() == SecuriPy.Text.decrypt(response[usr][1], "datasense"):
             user = username_entry.get()
             welcome = Label(login, text=f"Welcome back {username_entry.get()}", font="Arial 30", fg = "blue").pack()
             login.destroy() 

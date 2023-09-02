@@ -30,8 +30,8 @@ create database if not exists DataSense;
 use DataSense;
 
 create table if not exists Users (
-    Username varchar(10),
-    Password varchar(255)
+    Username varchar(1000),
+    Password varchar(1000)
 );
 
 create table if not exists Products (
