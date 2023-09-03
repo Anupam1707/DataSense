@@ -1,10 +1,11 @@
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
+from analytical_queries import *
 import time
 
 maintain_label = False
@@ -421,135 +422,92 @@ def numeric_window():
         if result == True:
             numeric.destroy()
             
-    
+    def switchh():
+        numeric.destroy()
+        home_window()
+        
     def empty_home():
         tren.pack_forget()
         pop.pack_forget()
         most.pack_forget()
 
-    def show_home():
-        tren.pack(pady = 10)
-        pop.pack(pady = 10)
-        most.pack(pady = 10)
-        
-    def switchh():
-        numeric.destroy()
-        home_window()
+    def prod_cat():
+        product_categories = get_product_categories()
+        print("Product Categories:")
+        for category in product_categories:
+            print(category[0])
+
+    def custordet():
+        custid = simpledialog.askstring(title="Enter Values",prompt="Customer ID")
+        customer_orders = get_customer_orders(custid)
+        print("\nCustomer Orders:")
+        for order in customer_orders:
+            print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+
+##        min_price = 100  # Replace with your desired minimum price
+##        high_priced_products = get_high_priced_products(min_price)
+##        print(f"\nProducts with a price greater than or equal to {min_price}:")
+##        for product in high_priced_products:
+##            print(f"Product Name: {product[0]}, Price: {product[1]}")
+##
+##        customer_order_counts = get_order_count_by_customer()
+##        print("\nOrder Counts by Customer:")
+##        for customer in customer_order_counts:
+##            print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
+##
+##        # Additional queries (1-4)
+##        start_date = '2023-08-01'
+##        end_date = '2023-08-05'
+##        orders_in_date_range = get_orders_in_date_range(start_date, end_date)
+##        print("\nOrders in Date Range:")
+##        for order in orders_in_date_range:
+##            print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+##
+##        total_revenue_by_category = get_total_revenue_by_category()
+##        print("\nTotal Revenue by Category:")
+##        for category, total_revenue in total_revenue_by_category:
+##            print(f"{category}: {total_revenue}")
+##
+##        customer_total_spent = get_customer_total_spent()
+##        print("\nCustomer Total Spent:")
+##        for customer, total_spent in customer_total_spent:
+##            print(f"Customer: {customer}, Total Spent: {total_spent}")
+##
+##        avg_product_price_by_category = get_average_product_price_by_category()
+##        print("\nAverage Product Price by Category:")
+##        for category, avg_price in avg_product_price_by_category:
+##            print(f"{category}: {avg_price}")
+##
+##        # Additional queries (5-12)
+##        order_id = 1  # Replace with a valid order ID
+##        order_details = get_order_details(order_id)
+##        print("\nOrder Details:")
+##        for detail in order_details:
+##            print(f"ProductID: {detail[0]}, ProductName: {detail[1]}, Quantity: {detail[2]}, Subtotal: {detail[3]}")
+##
+##        category = 'Electronics'  # Replace with a valid category
+##        products_in_category = get_products_in_category(category)
+##        print(f"\nProducts in Category '{category}':")
+##        for product in products_in_category:
+##            print(f"Product Name: {product[0]}, Price: {product[1]}")
+##
+##        top_customers = get_customers_with_highest_spending()
+##        print("\nTop Customers by Spending:")
+##        for customer in top_customers:
+##            print(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
+##
+##        date = '2023-08-01'  # Replace with a valid date
+##        category = 'Electronics'  # Replace with a valid category
+##        orders_by_date_category = get_orders_by_date_and_category(date, category)
+##        print(f"\nOrders on '{date}' in Category '{category}':")
+##        for order in orders_by_date_category:
+##            print(f"Product Name: {order[0]}, Order Date: {order[1]}, Quantity: {order[2]}, Subtotal: {order[3]}")
+##
+##        total_revenue_by_product = get_total_revenue_by_product()
+##        print("\nTotal Revenue by Product:")
+##        for product, total_revenue in total_revenue_by_product:
+##            print(f"Product Name: {product}, Total Revenue: {total_revenue}")
     
-    def trend_win():
-            empty_home()
-
-            def untrend():
-                utrend()
-                show_home()
-                
-            def utrend():
-                l.pack_forget()
-                c.pack_forget()
-                r.pack_forget()
-                b.pack_forget()
-
-            def city():
-                    utrend()
-
-                    dt = {}
-                    cityu = []
-                    produ = []
-                    mxp = ""
-                    mx = 0
-                    cities = data(sales, colno = col["city"])
-                    products = data(sales, colno = col["product"])
-
-                    for city in cities:
-                        while city not in cityu:
-                            cityu.append(city)
-                    cityu.remove(cityu[-1])
-                    cities = cityu
-                    cityu = None
-
-                    for product in products:
-                        while product not in produ:
-                            produ.append(product)
-                    produ.remove(produ[-1])
-                    products = produ
-                    produ = None
-
-                    ct = Frame(numeric, bg = "white")
-                    wait = Label(ct, text = "Analyzing Data....\nWe appreciate your patience", font = "Arial 30 bold")
-                    wait.pack(pady = 10)
-
-                    for city in cities:
-                        mx = 0
-                        mxp = ""
-                        dt = {}
-                        dt[city] = []
-                        
-                        for product in products:
-                            formula = f'=COUNTIFS(D2:D245, "{city}", F2:F245, "{product}")'
-                            sales.update_cell(1, 10, formula)
-                            result = int(sales.cell(1, 10).value)
-                            dt[city].append([product, result])
-                            print(city, product, type(result), result)
-                        print(dt)
-                        for value in dt[city]:
-                            if value[1] >= mx:
-                                    mx = value[1]
-                                    mxp = value[0]
-                        Label(numeric, text=f"Trending Product in {city} is {mxp}", font="Arial 30 bold").pack()
-                            
-                    back = Button(numeric, text = "Back", font = "Arial 20 bold", bg = "skyblue", command = trend_win)
-                    back.pack(pady = 10)
-
-            l = Label(numeric, text="Trending Product on Basis of :", font="Arial 30 bold")
-            l.pack(pady=10)
-            c = Button(numeric, text="City", font="Arial 20 bold", bg="skyblue", command=city)
-            c.pack(pady=10)
-            r = Button(numeric, text="Region", font="Arial 20 bold", bg="skyblue")
-            r.pack(pady=10)
-            b = Button(numeric, text="Back", font="Arial 20 bold", bg="skyblue", command=untrend)
-            b.pack(pady=10)
-
-
-    def most_sold_win():
-            empty_home()
-
-            def unmost():
-                l.pack_forget()
-                c.pack_forget()
-                ct.pack_forget()
-                r.pack_forget()
-                b.pack_forget()
-                show_home()
-            
-            l = Label(numeric, text="Most Sold Product on Basis of :", font="Arial 30 bold")
-            l.pack(pady=10)
-            c = Button(numeric, text="City", font="Arial 20 bold", bg="skyblue")
-            c.pack(pady=10)
-            r = Button(numeric, text="Region", font="Arial 20 bold", bg="skyblue")
-            r.pack(pady=10)
-            b = Button(numeric, text="Back", font="Arial 20 bold", bg="skyblue", command=unmost)
-            b.pack(pady=10)
-            
-    def pop_win():
-            empty_home()
-
-            def unpop():
-                l.pack_forget()
-                c.pack_forget()
-                ct.pack_forget()
-                r.pack_forget()
-                b.pack_forget()
-                show_home()
-                
-            l = Label(numeric, text="Popular Product on Basis of :", font="Arial 30 bold")
-            l.pack(pady=10)
-            c = Button(numeric, text="City", font="Arial 20 bold", bg="skyblue")
-            c.pack(pady=10)
-            r = Button(numeric, text="Region", font="Arial 20 bold", bg="skyblue")
-            r.pack(pady=10)
-            b = Button(numeric, text="Back", font="Arial 20 bold", bg="skyblue", command=unpop)
-            b.pack(pady=10)
-            
     img = Image.open("images/numeric.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
     test = ImageTk.PhotoImage(img)
@@ -558,12 +516,13 @@ def numeric_window():
     bk.place(x=-2, y=-2)
 
     Label(numeric, text='Numeric Analysis', font='Arial 35 bold', bg='#7676EE').pack(pady = 20)
-    tren = Button(numeric, text="Trending", font="Arial 20 bold", bg="skyblue", command=trend_win)
-    tren.pack(pady = 10)
-    pop  = Button(numeric, text="Popular", font="Arial 20 bold", bg="skyblue", command=pop_win)
-    pop.pack(pady = 10)
-    most  = Button(numeric, text="Most Sold", font="Arial 20 bold", bg="skyblue", command=most_sold_win)
-    most.pack(pady = 10)
+##    tren = Button(numeric, text="Trending", font="Arial 20 bold", bg="skyblue", command=trend_win)
+##    tren.pack(pady = 10)
+##    pop  = Button(numeric, text="Popular", font="Arial 20 bold", bg="skyblue", command=pop_win)
+##    pop.pack(pady = 10)
+##    most  = Button(numeric, text="Most Sold", font="Arial 20 bold", bg="skyblue", command=most_sold_win)
+##    most.pack(pady = 10)
+    Button(numeric, text="Customer Orders", command=custordet).pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     

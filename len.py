@@ -1,4 +1,4 @@
-files = ["db_installer.py","main.py", "sql_scripts.py", "visuals.py", "windows.py"]
+files = ["db_installer.py","main.py", "sql_scripts.py", "visuals.py", "windows.py", "analytical_queries.py"]
 sum = 0
 for file in files:
     with open(file) as f:
