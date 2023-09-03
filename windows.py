@@ -595,15 +595,13 @@ def graph_window():
 
 def export_window():
     export  = Tk()
-    rows = IntVar()
-    rowe = IntVar()
-    cols = IntVar()
-    cole = IntVar()
     screen_width = export.winfo_screenwidth()
     screen_height = export.winfo_screenheight()
 ##    x = (screen_width - 1280) // 2
 ##    y = (screen_height - 720) // 2
-##    
+    tabs = []
+    for i in execute_query("show tables"):
+        tabs.append(i[0])
     export.attributes("-fullscreen",True)
     export.overrideredirect(True)
     export.title("Data Export")
@@ -642,42 +640,20 @@ def export_window():
         def switchh():
             export.destroy()
             export_window()
-            
-        def concsv():
-##           query = "select * from " + table
-##           data = pd.read_sql(query
-##           df.to_csv("NumericAnalysis_Row{rows}Column{cole}.csv", index=False)
-            pass       
-        def conexcel():
-           dt = data(sales, alldata = True)
-           selected_rows = dt[(rows.get()-1):rowe.get()]
-           selected_columns = [row[(cols.get()-1):(cole.get()+1)] for row in selected_rows]
-           df = pd.DataFrame(selected_columns)
-           df.to_excel("NumericAnalysis_Row{rows}Column{cole}.xlsx", index=False)
 
-        rsl = Label(export, text = "Starting Row", font = "Arial 20 bold", bg = "skyblue")
-        rsl.pack(pady = 10)
-        rs = Entry(export, textvariable = rows, font  = "Arial 20 bold")
-        rs.pack(pady = 10)
-        rel = Label(export, text = "Ending Row", font = "Arial 20 bold", bg = "skyblue")
-        rel.pack(pady = 10)
-        re = Entry(export, textvariable = rowe, font  = "Arial 20 bold")
-        re.pack(pady = 10)
-        
-        csl = Label(export, text = "Starting Column", font = "Arial 20 bold", bg = "skyblue")
-        csl.pack(pady = 10)
-        cs = Entry(export, textvariable = cols, font  = "Arial 20 bold")
-        cs.pack(pady = 10)
-        cel = Label(export, text = "Ending Column", font = "Arial 20 bold", bg = "skyblue")
-        cel.pack(pady = 10)
-        ce = Entry(export, textvariable = cole, font  = "Arial 20 bold")
-        ce.pack(pady = 10)
-        
-        csvexp = Button(export, text = "Export as CSV", font = "Arial 20 bold", bg = "skyblue", command = concsv())
+        csvexp = Button(export, text = "Export as CSV", font = "Arial 20 bold", bg = "skyblue",
+                        command = lambda : save_csv(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
         csvexp.pack(pady = 10)
-        excelexp = Button(export, text = "Export as Spreadsheet", font = "Arial 20 bold", bg = "skyblue", command = conexcel())
+        excelexp = Button(export, text = "Export as Spreadsheet", font = "Arial 20 bold", bg = "skyblue",
+                          command = lambda : save_excel(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
         excelexp.pack(pady = 10)
-        
+        custc = Button(export, text = "Custom Query (CSV)", font = "Arial 20 bold", bg = "skyblue",
+                      command = lambda : custom_query_save_csv(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
+        custc.pack(pady = 10)
+        custe = Button(export, text = "Custom Query (Spreadsheet)", font = "Arial 20 bold", bg = "skyblue",
+                      command = lambda : custom_query_save_excel(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
+        custe.pack(pady = 10)
+                      
     n = Button(export, text = "Numeric Export", font = "Arial 20 bold", bg = "skyblue", command=num)
     n.pack(pady = 10)
     v = Button(export, text = "Visual Export", font = "Arial 20 bold", bg = "skyblue", command=switchg)

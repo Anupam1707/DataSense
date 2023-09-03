@@ -39,6 +39,43 @@ def save_excel(table):
         except UserWarning:
             pass
 
+def save_csv(table):
+    conn = connect_to_database()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("USE datasense")
+            r = cursor.fetchall()
+            query = f"SELECT * FROM {table}"
+            data = pd.read_sql(query, conn)
+            data.to_csv(f"{table}.csv", index=False)
+        except UserWarning:
+            pass
+
+def custom_query_save_csv(query):
+    conn = connect_to_database()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("USE datasense")
+            r = cursor.fetchall()
+            data = pd.read_sql(query, conn)
+            data.to_csv("Custom Table.csv", index=False)
+        except UserWarning:
+            pass
+
+def custom_query_save_excel(query):
+    conn = connect_to_database()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("USE datasense")
+            r = cursor.fetchall()
+            data = pd.read_sql(query, conn)
+            data.to_excel("Custom Table.xlsx", index=False)
+        except UserWarning:
+            pass
+        
 def close_connection():
     if conn is not None:
         conn.close()
