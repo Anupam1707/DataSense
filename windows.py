@@ -444,69 +444,78 @@ def numeric_window():
         for order in customer_orders:
             print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
 
-##        min_price = 100  # Replace with your desired minimum price
-##        high_priced_products = get_high_priced_products(min_price)
-##        print(f"\nProducts with a price greater than or equal to {min_price}:")
-##        for product in high_priced_products:
-##            print(f"Product Name: {product[0]}, Price: {product[1]}")
-##
-##        customer_order_counts = get_order_count_by_customer()
-##        print("\nOrder Counts by Customer:")
-##        for customer in customer_order_counts:
-##            print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
-##
-##        # Additional queries (1-4)
-##        start_date = '2023-08-01'
-##        end_date = '2023-08-05'
-##        orders_in_date_range = get_orders_in_date_range(start_date, end_date)
-##        print("\nOrders in Date Range:")
-##        for order in orders_in_date_range:
-##            print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
-##
-##        total_revenue_by_category = get_total_revenue_by_category()
-##        print("\nTotal Revenue by Category:")
-##        for category, total_revenue in total_revenue_by_category:
-##            print(f"{category}: {total_revenue}")
-##
-##        customer_total_spent = get_customer_total_spent()
-##        print("\nCustomer Total Spent:")
-##        for customer, total_spent in customer_total_spent:
-##            print(f"Customer: {customer}, Total Spent: {total_spent}")
-##
-##        avg_product_price_by_category = get_average_product_price_by_category()
-##        print("\nAverage Product Price by Category:")
-##        for category, avg_price in avg_product_price_by_category:
-##            print(f"{category}: {avg_price}")
-##
-##        # Additional queries (5-12)
-##        order_id = 1  # Replace with a valid order ID
-##        order_details = get_order_details(order_id)
-##        print("\nOrder Details:")
-##        for detail in order_details:
-##            print(f"ProductID: {detail[0]}, ProductName: {detail[1]}, Quantity: {detail[2]}, Subtotal: {detail[3]}")
-##
-##        category = 'Electronics'  # Replace with a valid category
-##        products_in_category = get_products_in_category(category)
-##        print(f"\nProducts in Category '{category}':")
-##        for product in products_in_category:
-##            print(f"Product Name: {product[0]}, Price: {product[1]}")
-##
-##        top_customers = get_customers_with_highest_spending()
-##        print("\nTop Customers by Spending:")
-##        for customer in top_customers:
-##            print(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
-##
-##        date = '2023-08-01'  # Replace with a valid date
-##        category = 'Electronics'  # Replace with a valid category
-##        orders_by_date_category = get_orders_by_date_and_category(date, category)
-##        print(f"\nOrders on '{date}' in Category '{category}':")
-##        for order in orders_by_date_category:
-##            print(f"Product Name: {order[0]}, Order Date: {order[1]}, Quantity: {order[2]}, Subtotal: {order[3]}")
-##
-##        total_revenue_by_product = get_total_revenue_by_product()
-##        print("\nTotal Revenue by Product:")
-##        for product, total_revenue in total_revenue_by_product:
-##            print(f"Product Name: {product}, Total Revenue: {total_revenue}")
+    def highpprod():
+        min_price = simpledialog.askstring(title="Enter Values",prompt="Minimun Price")
+        high_priced_products = get_high_priced_products(min_price)
+        print(f"\nProducts with a price greater than or equal to {min_price}:")
+        for product in high_priced_products:
+            print(f"Product Name: {product[0]}, Price: {product[1]}")
+
+    def custorcnt():
+        customer_order_counts = get_order_count_by_customer()
+        print("\nOrder Counts by Customer:")
+        for customer in customer_order_counts:
+            print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
+
+    def ordrng():
+        start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
+        end_date = simpledialog.askstring(title="Enter Values",prompt="End Date (YYYY-MM-DD)")
+        orders_in_date_range = get_orders_in_date_range(start_date, end_date)
+        print("\nOrders in Date Range:")
+        for order in orders_in_date_range:
+            print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+
+    def revcat():
+        total_revenue_by_category = get_total_revenue_by_category()
+        print("\nTotal Revenue by Category:")
+        for category, total_revenue in total_revenue_by_category:
+            print(f"{category}: {total_revenue}")
+
+    def custtpent():
+        customer_total_spent = get_customer_total_spent()
+        print("\nCustomer Total Spent:")
+        for customer, total_spent in customer_total_spent:
+            print(f"Customer: {customer}, Total Spent: {total_spent}")
+
+    def avgpricexcat():
+        avg_product_price_by_category = get_average_product_price_by_category()
+        print("\nAverage Product Price by Category:")
+        for category, avg_price in avg_product_price_by_category:
+            print(f"{category}: {avg_price}")
+
+    def ordet():
+        order_id = simpledialog.askstring(title="Enter Values",prompt="Order ID")
+        order_details = get_order_details(order_id)
+        print("\nOrder Details:")
+        for detail in order_details:
+            print(f"ProductID: {detail[0]}, ProductName: {detail[1]}, Quantity: {detail[2]}, Subtotal: {detail[3]}")
+
+    def prodcat():
+        category = simpledialog.askstring(title="Enter Values",prompt="Category")
+        products_in_category = get_products_in_category(category)
+        print(f"\nProducts in Category '{category}':")
+        for product in products_in_category:
+            print(f"Product Name: {product[0]}, Price: {product[1]}")
+
+    def hspentcust():
+        top_customers = get_customers_with_highest_spending()
+        print("\nTop Customers by Spending:")
+        for customer in top_customers:
+            print(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
+
+    def dtcatord():
+        date = simpledialog.askstring(title="Enter Values",prompt="Date")
+        category = simpledialog.askstring(title="Enter Values",prompt="Category")
+        orders_by_date_category = get_orders_by_date_and_category(date, category)
+        print(f"\nOrders on '{date}' in Category '{category}':")
+        for order in orders_by_date_category:
+            print(f"Product Name: {order[0]}, Order Date: {order[1]}, Quantity: {order[2]}, Subtotal: {order[3]}")
+
+    def treveprod():
+        total_revenue_by_product = get_total_revenue_by_product()
+        print("\nTotal Revenue by Product:")
+        for product, total_revenue in total_revenue_by_product:
+            print(f"Product Name: {product}, Total Revenue: {total_revenue}")
     
     img = Image.open("images/numeric.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
@@ -522,7 +531,7 @@ def numeric_window():
 ##    pop.pack(pady = 10)
 ##    most  = Button(numeric, text="Most Sold", font="Arial 20 bold", bg="skyblue", command=most_sold_win)
 ##    most.pack(pady = 10)
-    Button(numeric, text="Customer Orders", command=custordet).pack()
+    Button(numeric, text="Customer Orders", command=highpprod).pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     

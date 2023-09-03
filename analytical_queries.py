@@ -1,5 +1,5 @@
 from sql_scripts import *
-# Simple analytical queries
+
 def get_product_categories():
         query = """select distinct(Category) from Products"""
         return execute_query(query)
@@ -26,7 +26,7 @@ def get_orders_in_date_range(start_date, end_date):
         query = """
         select OrderID, OrderDate, TotalAmount
         from Orders
-        where OrderDate BETWEEN '{}' AND '{}'
+        where OrderDate between '{}' and '{}'
         """.format(start_date, end_date)
         return execute_query(query)
 
