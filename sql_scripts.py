@@ -31,9 +31,9 @@ def save_excel(table):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("USE datasense")
+            cursor.execute("use datasense")
             r = cursor.fetchall()
-            query = f"SELECT * FROM {table}"
+            query = f"select * from {table}"
             data = pd.read_sql(query, conn)
             data.to_excel(f"{table}.xlsx", index=False)
         except UserWarning:
@@ -44,9 +44,9 @@ def save_csv(table):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("USE datasense")
+            cursor.execute("use datasense")
             r = cursor.fetchall()
-            query = f"SELECT * FROM {table}"
+            query = f"select * from {table}"
             data = pd.read_sql(query, conn)
             data.to_csv(f"{table}.csv", index=False)
         except UserWarning:
