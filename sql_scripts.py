@@ -57,7 +57,7 @@ def custom_query_save_csv(query):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("USE datasense")
+            cursor.execute("use datasense")
             r = cursor.fetchall()
             data = pd.read_sql(query, conn)
             data.to_csv("Custom Table.csv", index=False)
@@ -69,7 +69,7 @@ def custom_query_save_excel(query):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("USE datasense")
+            cursor.execute("use datasense")
             r = cursor.fetchall()
             data = pd.read_sql(query, conn)
             data.to_excel("Custom Table.xlsx", index=False)
