@@ -456,18 +456,24 @@ def numeric_window():
             disp.insert(INSERT, "\n")
 
     def highpprod():
+        disp.delete("1.0", "end")
         min_price = simpledialog.askstring(title="Enter Values",prompt="Minimun Price")
         high_priced_products = get_high_priced_products(min_price)
         print(f"\nProducts with a price greater than or equal to {min_price}:")
         for product in high_priced_products:
             print(f"Product Name: {product[0]}, Price: {product[1]}")
+            disp.insert(INSERT, f"Product Name: {product[0]}, Price: {product[1]}")
+            disp.insert(INSERT, "\n")
 
     def custorcnt():
+        disp.delete("1.0", "end")
         customer_order_counts = get_order_count_by_customer()
         log("Analytical Data Extracted")
         print("\nOrder Counts by Customer:")
         for customer in customer_order_counts:
             print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
+            disp.insert(INSERT, f"Customer: {customer[0]}, Order Count: {customer[1]}")
+            disp.insert(INSERT, "\n")
 
     def ordrng():
         start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
