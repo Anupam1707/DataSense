@@ -140,3 +140,5 @@ finally:
     time.sleep(3)
     if connection:
         connection.close()
+with open("log.tiak", "w") as l:
+    pass

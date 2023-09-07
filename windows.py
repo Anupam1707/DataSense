@@ -7,6 +7,7 @@ import pandas as pd
 from sql_scripts import *
 from analytical_queries import *
 import time
+import datetime
 
 maintain_label = False
 #Function to give values of the input to the graph plotter to plot the graph
@@ -73,9 +74,9 @@ def home_window():
         
     Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
-    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
-    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
-    Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=20)
+    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=20)
+    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=20)
+    Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=maintain).pack(pady=20)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=20)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=20)
     Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=maintain).pack(pady=20)
@@ -114,6 +115,7 @@ def signup_window():
         print(p)
         q = f"insert into users (username, password) values ('{u}', '{p}')"
         r = execute_query(q)
+        log("New User Registered")
         signup.destroy()
         home_window()
         
@@ -167,6 +169,7 @@ def login_window():
         else:
             error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
             error_label.pack()
+        log(str(username_entry.get() + "logged in"))
 
     button = Button(login, text="Login", font = "Arial 30 bold", command=login_button).pack(side = TOP)
     Button(login, text = 'Exit', font = 'Arial 20 bold', bg='red', command=login.destroy).pack(side = BOTTOM,anchor = "se")
@@ -410,8 +413,8 @@ def numeric_window():
     global ct
     screen_width = numeric.winfo_screenwidth()
     screen_height = numeric.winfo_screenheight()
-    #x = (screen_width - 1280) // 2
-    #y = (screen_height - 720) // 2
+    x = (screen_width) // 2
+    y = (screen_height) // 2
 
     numeric.title("Numeric Analysis")
     numeric.attributes("-fullscreen",True)
@@ -431,18 +434,26 @@ def numeric_window():
         pop.pack_forget()
         most.pack_forget()
 
-    def prod_cat():
+    def prod_cats():
+        disp.delete("1.0", "end")
         product_categories = get_product_categories()
+        log("Analytical Data Extracted")
         print("Product Categories:")
         for category in product_categories:
             print(category[0])
+            disp.insert(INSERT, category[0])
+            disp.insert(INSERT, "\n")
 
     def custordet():
+        disp.delete("1.0", "end")
         custid = simpledialog.askstring(title="Enter Values",prompt="Customer ID")
         customer_orders = get_customer_orders(custid)
+        log("Analytical Data Extracted")
         print("\nCustomer Orders:")
         for order in customer_orders:
             print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+            disp.insert(INSERT, f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+            disp.insert(INSERT, "\n")
 
     def highpprod():
         min_price = simpledialog.askstring(title="Enter Values",prompt="Minimun Price")
@@ -453,6 +464,7 @@ def numeric_window():
 
     def custorcnt():
         customer_order_counts = get_order_count_by_customer()
+        log("Analytical Data Extracted")
         print("\nOrder Counts by Customer:")
         for customer in customer_order_counts:
             print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
@@ -461,24 +473,28 @@ def numeric_window():
         start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
         end_date = simpledialog.askstring(title="Enter Values",prompt="End Date (YYYY-MM-DD)")
         orders_in_date_range = get_orders_in_date_range(start_date, end_date)
+        log("Analytical Data Extracted")
         print("\nOrders in Date Range:")
         for order in orders_in_date_range:
             print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
 
     def revcat():
         total_revenue_by_category = get_total_revenue_by_category()
+        log("Analytical Data Extracted")
         print("\nTotal Revenue by Category:")
         for category, total_revenue in total_revenue_by_category:
             print(f"{category}: {total_revenue}")
 
-    def custtpent():
+    def custtspent():
         customer_total_spent = get_customer_total_spent()
+        log("Analytical Data Extracted")
         print("\nCustomer Total Spent:")
         for customer, total_spent in customer_total_spent:
             print(f"Customer: {customer}, Total Spent: {total_spent}")
 
-    def avgpricexcat():
+    def avgpricat():
         avg_product_price_by_category = get_average_product_price_by_category()
+        log("Analytical Data Extracted")
         print("\nAverage Product Price by Category:")
         for category, avg_price in avg_product_price_by_category:
             print(f"{category}: {avg_price}")
@@ -486,19 +502,22 @@ def numeric_window():
     def ordet():
         order_id = simpledialog.askstring(title="Enter Values",prompt="Order ID")
         order_details = get_order_details(order_id)
+        log("Analytical Data Extracted")
         print("\nOrder Details:")
         for detail in order_details:
             print(f"ProductID: {detail[0]}, ProductName: {detail[1]}, Quantity: {detail[2]}, Subtotal: {detail[3]}")
 
-    def prodcat():
+    def cat_prods():
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
         products_in_category = get_products_in_category(category)
+        log("Analytical Data Extracted")
         print(f"\nProducts in Category '{category}':")
         for product in products_in_category:
             print(f"Product Name: {product[0]}, Price: {product[1]}")
 
     def hspentcust():
         top_customers = get_customers_with_highest_spending()
+        log("Analytical Data Extracted")
         print("\nTop Customers by Spending:")
         for customer in top_customers:
             print(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
@@ -507,12 +526,14 @@ def numeric_window():
         date = simpledialog.askstring(title="Enter Values",prompt="Date")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
         orders_by_date_category = get_orders_by_date_and_category(date, category)
+        log("Analytical Data Extracted")
         print(f"\nOrders on '{date}' in Category '{category}':")
         for order in orders_by_date_category:
             print(f"Product Name: {order[0]}, Order Date: {order[1]}, Quantity: {order[2]}, Subtotal: {order[3]}")
 
     def treveprod():
         total_revenue_by_product = get_total_revenue_by_product()
+        log("Analytical Data Extracted")
         print("\nTotal Revenue by Product:")
         for product, total_revenue in total_revenue_by_product:
             print(f"Product Name: {product}, Total Revenue: {total_revenue}")
@@ -531,9 +552,23 @@ def numeric_window():
 ##    pop.pack(pady = 10)
 ##    most  = Button(numeric, text="Most Sold", font="Arial 20 bold", bg="skyblue", command=most_sold_win)
 ##    most.pack(pady = 10)
-    Button(numeric, text="Customer Orders", command=highpprod).pack()
+    Button(numeric, text="Categorized Products", command=prod_cats).pack()
+    Button(numeric, text="Customer Orders", command=custordet).pack()
+    Button(numeric, text="High Priced Product", command=highpprod).pack()
+    Button(numeric, text="Customer Orders Count", command=custorcnt).pack()
+    Button(numeric, text="Orders b/w Dates", command=ordrng).pack()
+    Button(numeric, text="Revenue by Category", command=revcat).pack()
+    Button(numeric, text="Customer Total Spent", command=custtspent).pack()
+    Button(numeric, text="Average Product Price", command=avgpricat).pack()
+    Button(numeric, text="Order Details", command=ordet).pack()
+    Button(numeric, text="Prodcat", command=cat_prods).pack()
+    Button(numeric, text="Customer Highest Spent", command=hspentcust).pack()
+    Button(numeric, text="Orders by Date and Category", command=dtcatord).pack()
+    Button(numeric, text="Revenvue by Product", command=custordet).pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
+    disp = Text(numeric, width = 40, height = 11, font = "Arial 20 bold", bg = "black", fg = "white")
+    disp.pack(side = RIGHT, anchor= "e", padx = 30)
     
     numeric.mainloop()
     

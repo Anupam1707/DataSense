@@ -1,5 +1,6 @@
 import mysql.connector
 import pandas as pd
+import datetime
 with open("creds.tiak") as f:
         creds = f.read()
         creds = creds.split(",")
@@ -14,6 +15,12 @@ db_config = {
         'host': host,
         'auth_plugin':'mysql_native_password'
 }
+
+def log(event):
+    with open("log.tiak", "a") as l:
+        l.write(str(event) + " " + str(datetime.datetime.now()))
+        l.write("\n")
+
 # Establish a connection to the MySQL server
 def connect_to_database():
     try:
@@ -23,7 +30,7 @@ def connect_to_database():
     except mysql.connector.Error as err:
         print("Error:", err)
     return None
-    
+
 conn = connect_to_database()
 
 def save_excel(table):
@@ -31,50 +38,66 @@ def save_excel(table):
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("use datasense")
+            cursor.execute("USE datasense")
             r = cursor.fetchall()
-            query = f"select * from {table}"
-            data = pd.read_sql(query, conn)
-            data.to_excel(f"{table}.xlsx", index=False)
-        except UserWarning:
+            query = f"SELECT * FROM {table}"
+            try:
+                data = pd.read_sql(query, conn)
+                data.to_excel(f"{table}.xlsx", index=False)
+            except pd.errors.DatabaseError:
+                print("Incorrect Query")
+        except Warning:
             pass
+        log("Data Exported")
 
 def save_csv(table):
     conn = connect_to_database()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("use datasense")
+            cursor.execute("USE datasense")
             r = cursor.fetchall()
-            query = f"select * from {table}"
-            data = pd.read_sql(query, conn)
-            data.to_csv(f"{table}.csv", index=False)
-        except UserWarning:
+            query = f"SELECT * FROM {table}"
+            try:
+                data = pd.read_sql(query, conn)
+                data.to_csv(f"{table}.csv", index=False)
+            except pd.errors.DatabaseError:
+                print("Incorrect Query")
+        except Warning:
             pass
+        log("Data Exported")
 
 def custom_query_save_csv(query):
     conn = connect_to_database()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("use datasense")
+            cursor.execute("USE datasense")
             r = cursor.fetchall()
-            data = pd.read_sql(query, conn)
-            data.to_csv("Custom Table.csv", index=False)
-        except UserWarning:
+            try:
+                data = pd.read_sql(query, conn)
+                data.to_csv("Custom Table.csv", index=False)
+            except pd.errors.DatabaseError:
+                print("Incorrect Query")
+        except Warning:
             pass
+        log("Data Exported")
 
 def custom_query_save_excel(query):
     conn = connect_to_database()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            cursor.execute("use datasense")
+            cursor.execute("USE datasense")
             r = cursor.fetchall()
-            data = pd.read_sql(query, conn)
-            data.to_excel("Custom Table.xlsx", index=False)
-        except UserWarning:
+            try:
+                data = pd.read_sql(query, conn)
+                data.to_excel("Custom Table.xlsx", index=False)
+            except pd.errors.DatabaseError:
+                print("Incorrect Query")
+        except Warning:
             pass
+        log("Data Exported")
         
 def close_connection():
     if conn is not None:
@@ -87,7 +110,8 @@ def execute_query(query):
         try:
             cursor.execute(query)
             if query.strip().lower().startswith('insert'):
-                conn.commit()  # For INSERT queries, commit the transaction
+                conn.commit()  # For insert queries, commit the transaction
+                log("Data Added to the Database")
             else:
                 r = cursor.fetchall()  # For other queries, fetch the results
                 conn.commit()
