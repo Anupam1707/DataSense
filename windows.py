@@ -16,7 +16,7 @@ def pt():
         plotb(data(sales, col[l1v.get().lower()]), data(sales, col[l2v.get().lower()]), t = "bv")
     if l1v.get() != None and l2v.get() != None and typ.get() == "horizontal bar graph":
         plotb(data(sales, col[l1v.get().lower()]), data(sales, col[l2v.get().lower()]), t = "bh")
-
+    
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -404,9 +404,9 @@ def welcome_window():
         if result == True:
             welcome.destroy()
     Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady=50)
-    Button(welcome, text = "Create Account",font = "Arial 30 bold", command=switchs).pack(side = LEFT, padx = 210, pady=60, anchor="sw")
-    Label(welcome, text = "or", font = "Arial 40 italic",bg = "#0d1133", fg = "white").pack(side= BOTTOM, pady=70, anchor="sw")
-    Button(welcome, text = "Login",font = "Arial 30 bold", command=switchl).pack(side = LEFT, padx = 50, pady=60, anchor="sw")
+    Button(welcome, text = "Create Account", font = "Arial 30 bold", command=switchs).pack(side = LEFT, anchor = "sw")
+    Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
+    Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     
 def numeric_window():
     numeric = Tk()
@@ -424,7 +424,11 @@ def numeric_window():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
             numeric.destroy()
-            
+
+    def display(text):
+        disp.insert(INSERT, text)
+        disp.insert(INSERT, "\n")
+        
     def switchh():
         numeric.destroy()
         home_window()
@@ -438,11 +442,11 @@ def numeric_window():
         disp.delete("1.0", "end")
         product_categories = get_product_categories()
         log("Analytical Data Extracted")
-        print("Product Categories:")
+        print("\nProduct Categories:")
+        display("\nProduct Categories:")
         for category in product_categories:
             print(category[0])
-            disp.insert(INSERT, category[0])
-            disp.insert(INSERT, "\n")
+            display(category[0])
 
     def custordet():
         disp.delete("1.0", "end")
@@ -450,99 +454,126 @@ def numeric_window():
         customer_orders = get_customer_orders(custid)
         log("Analytical Data Extracted")
         print("\nCustomer Orders:")
+        display("\nCustomer Orders:")
         for order in customer_orders:
             print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
-            disp.insert(INSERT, f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
-            disp.insert(INSERT, "\n")
+            display(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
 
     def highpprod():
         disp.delete("1.0", "end")
         min_price = simpledialog.askstring(title="Enter Values",prompt="Minimun Price")
         high_priced_products = get_high_priced_products(min_price)
         print(f"\nProducts with a price greater than or equal to {min_price}:")
+        display(f"\nProducts with a price greater than or equal to {min_price}:")
         for product in high_priced_products:
             print(f"Product Name: {product[0]}, Price: {product[1]}")
-            disp.insert(INSERT, f"Product Name: {product[0]}, Price: {product[1]}")
-            disp.insert(INSERT, "\n")
+            display(f"Product Name: {product[0]}, Price: {product[1]}")
 
     def custorcnt():
         disp.delete("1.0", "end")
         customer_order_counts = get_order_count_by_customer()
         log("Analytical Data Extracted")
         print("\nOrder Counts by Customer:")
+        display("\nOrder Counts by Customer:")
         for customer in customer_order_counts:
             print(f"Customer: {customer[0]}, Order Count: {customer[1]}")
-            disp.insert(INSERT, f"Customer: {customer[0]}, Order Count: {customer[1]}")
-            disp.insert(INSERT, "\n")
-
+            display(f"Customer: {customer[0]}, Order Count: {customer[1]}")
+                    
     def ordrng():
+        disp.delete("1.0", "end")
         start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
         end_date = simpledialog.askstring(title="Enter Values",prompt="End Date (YYYY-MM-DD)")
         orders_in_date_range = get_orders_in_date_range(start_date, end_date)
         log("Analytical Data Extracted")
         print("\nOrders in Date Range:")
+        display("\nOrders in Date Range:")
         for order in orders_in_date_range:
             print(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
+            display(f"OrderID: {order[0]}, Date: {order[1]}, Total Amount: {order[2]}")
 
     def revcat():
+        disp.delete("1.0", "end")
         total_revenue_by_category = get_total_revenue_by_category()
         log("Analytical Data Extracted")
         print("\nTotal Revenue by Category:")
+        display("\nTotal Revenue by Category:")
         for category, total_revenue in total_revenue_by_category:
             print(f"{category}: {total_revenue}")
+            display(f"{category}: {total_revenue}")
 
     def custtspent():
+        disp.delete("1.0", "end")
         customer_total_spent = get_customer_total_spent()
         log("Analytical Data Extracted")
         print("\nCustomer Total Spent:")
+        display("\nCustomer Total Spent:")
         for customer, total_spent in customer_total_spent:
             print(f"Customer: {customer}, Total Spent: {total_spent}")
+            display(f"Customer: {customer}, Total Spent: {total_spent}")
 
     def avgpricat():
+        disp.delete("1.0", "end")
         avg_product_price_by_category = get_average_product_price_by_category()
         log("Analytical Data Extracted")
         print("\nAverage Product Price by Category:")
+        display("\nAverage Product Price by Category:")
         for category, avg_price in avg_product_price_by_category:
             print(f"{category}: {avg_price}")
+            display(f"{category}: {avg_price}")
 
     def ordet():
+        disp.delete("1.0", "end")
         order_id = simpledialog.askstring(title="Enter Values",prompt="Order ID")
         order_details = get_order_details(order_id)
         log("Analytical Data Extracted")
         print("\nOrder Details:")
+        display("\nOrder Details:")
         for detail in order_details:
-            print(f"ProductID: {detail[0]}, ProductName: {detail[1]}, Quantity: {detail[2]}, Subtotal: {detail[3]}")
+            print(f"ProductID: {detail[0]}, \nProductName: {detail[1]}, \nQuantity: {detail[2]}, \nSubtotal: {detail[3]}")
+            display(f"ProductID: {detail[0]}, \nProductName: {detail[1]}, \nQuantity: {detail[2]}, \nSubtotal: {detail[3]}")
 
     def cat_prods():
+        disp.delete("1.0", "end")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
         products_in_category = get_products_in_category(category)
         log("Analytical Data Extracted")
         print(f"\nProducts in Category '{category}':")
+        display(f"\nProducts in Category '{category}':")
         for product in products_in_category:
             print(f"Product Name: {product[0]}, Price: {product[1]}")
+            display(f"Product Name: {product[0]}, Price: {product[1]}")
 
     def hspentcust():
+        disp.delete("1.0", "end")
         top_customers = get_customers_with_highest_spending()
         log("Analytical Data Extracted")
         print("\nTop Customers by Spending:")
+        display("\nTop Customers by Spending:")
         for customer in top_customers:
             print(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
+            display(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
 
     def dtcatord():
+        disp.delete("1.0", "end")
         date = simpledialog.askstring(title="Enter Values",prompt="Date")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
         orders_by_date_category = get_orders_by_date_and_category(date, category)
         log("Analytical Data Extracted")
         print(f"\nOrders on '{date}' in Category '{category}':")
+        display(f"\nOrders on '{date}' in Category '{category}':")
         for order in orders_by_date_category:
-            print(f"Product Name: {order[0]}, Order Date: {order[1]}, Quantity: {order[2]}, Subtotal: {order[3]}")
-
+            print(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
+            display(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
+            
     def treveprod():
+        disp.delete("1.0", "end")
         total_revenue_by_product = get_total_revenue_by_product()
         log("Analytical Data Extracted")
         print("\nTotal Revenue by Product:")
+        display("\nTotal Revenue by Product:")
         for product, total_revenue in total_revenue_by_product:
             print(f"Product Name: {product}, Total Revenue: {total_revenue}")
+            display(f"Product Name: {product}, Total Revenue: {total_revenue}")
     
     img = Image.open("images/numeric.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
@@ -570,11 +601,11 @@ def numeric_window():
     Button(numeric, text="Prodcat", command=cat_prods).pack()
     Button(numeric, text="Customer Highest Spent", command=hspentcust).pack()
     Button(numeric, text="Orders by Date and Category", command=dtcatord).pack()
-    Button(numeric, text="Revenvue by Product", command=custordet).pack()
+    Button(numeric, text="Revenvue by Product", command=treveprod).pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
-    disp = Text(numeric, width = 40, height = 11, font = "Arial 20 bold", bg = "black", fg = "white")
-    disp.pack(side = RIGHT, anchor= "e", padx = 30)
+    disp = Text(numeric, width = 50, height = 11, font = ("Ink Free", 20), bg = "black", fg = "white")
+    disp.pack(side = BOTTOM, anchor= "s",pady = 30)
     
     numeric.mainloop()
     
