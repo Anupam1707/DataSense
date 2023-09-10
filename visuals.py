@@ -1,46 +1,30 @@
-"""This program is the Graphing Program of the App."""
 import matplotlib.pyplot as plt
-import numpy as np
+import random
+from sql_scripts import *
 
-#Function to Plot Horizontal Bar Graph, Vertical Bar Graph and Histogram
-def plotb(*ls, t = "bv"):
-    xval = []
-    yval = []
-    fig = plt.figure(figsize = (10, 5))
-                     
-    if len(ls) == 2:
-            xval = ls[0]
-            yval = ls[1]
-            
-            x = ls[0][-1]
-            x = x.title()
-            y = ls[1][-1]
-            y = y.title()
-            
-            ls[0].remove(ls[0][-1])
-            ls[1].remove(ls[1][-1])
+# Function to create and show a bar chart (horizontal or vertical) using .show()
+def bar_chart(x_values, y_values, x_axis_label, y_axis_label, title, orientation='vertical'):
+    color = ['#{:02x}{:02x}{:02x}'.format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for i in x_values]
+    fig, ax = plt.subplots(figsize=(8, 4))
     
-            #Vertical Bar Graph
-            if t == "bv":
-                plt.bar(xval, yval, color = "blue")
-                plt.xlabel(x)
-                plt.ylabel(y)
-                plt.title("Industry Sales Analysis")
-                plt.show()
-                
-            #Horizontal Bar Graph
-            elif t == "bh":
-                plt.barh(xval, yval, color = "blue")
-                plt.xlabel(y)
-                plt.ylabel(x)
-                plt.title("Industry Sales Analysis")
-                plt.show()
+    if orientation == 'vertical':
+        ax.bar(x_values, y_values, color=color)
+        ax.set_xlabel(x_axis_label)
+        ax.set_ylabel(y_axis_label)
+    elif orientation == 'horizontal':
+        ax.barh(x_values, y_values, color=color)
+        ax.set_xlabel(y_axis_label)
+        ax.set_ylabel(x_axis_label)
+    
+    ax.set_title(title)
+    plt.show()
 
-#Function to Plot a Pie Chart
-def pie(dt):
-    labels = dt.keys()
-        
-    y = np.array(list(dt.values))
-    mylabels = labels
-    plt.pie(y, labels = mylabels)
+# Function to create a pie chart and display it using .show()
+def pie_chart(labels, sizes, title):
+    colors = ['#{:02x}{:02x}{:02x}'.format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in sizes]
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+    ax.axis('equal')
+    ax.set_title(title)
+
     plt.show()

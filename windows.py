@@ -5,18 +5,12 @@ from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
-from analytical_queries import *
+from numeric_queries import *
 import time
 import datetime
 
 maintain_label = False
-#Function to give values of the input to the graph plotter to plot the graph
-def pt():
-    if l1v.get() != None and l2v.get() != None and typ.get() == "vertical bar graph":
-        plotb(data(sales, col[l1v.get().lower()]), data(sales, col[l2v.get().lower()]), t = "bv")
-    if l1v.get() != None and l2v.get() != None and typ.get() == "horizontal bar graph":
-        plotb(data(sales, col[l1v.get().lower()]), data(sales, col[l2v.get().lower()]), t = "bh")
-    
+
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -391,6 +385,13 @@ def welcome_window():
     bk.image = test
     bk.place(x=-2, y=-2)
 
+    gr = Image.open("images/fig1.png")
+    grimg = gr.resize((int(screen_width/3),int(screen_height/3)), Image.LANCZOS)
+    gtest = ImageTk.PhotoImage(grimg)
+    bkgr = Label(image=gtest)
+    bkgr.image = gtest
+    bkgr.place(x=60, y=180)
+    
     def switchl():
         welcome.destroy()
         login_window()
@@ -624,7 +625,7 @@ def graph_window():
 ##    x = (screen_width - 1280) // 2
 ##    y = (screen_height - 720) // 2
 
-    graph.title("Numeric Analysis")
+    graph.title("Visual Analysis")
     graph.attributes("-fullscreen",True)
     graph.overrideredirect(True)
     
@@ -646,9 +647,9 @@ def graph_window():
             
       
     l1v = StringVar()
-    l1v.set("product")
+    l1v.set("First Array")
     l2v = StringVar()
-    l2v.set("total price")
+    l2v.set("Second Array")
     typ = StringVar()
     typ.set("horizontal bar graph")
     
