@@ -33,52 +33,40 @@ def customers():
 ##########################################################################
 def total_sales_cat():
     lst = execute_query("""
-        SELECT P.Category,
-        SUM(OD.Quantity * P.Price) TotalSalesAmount
-        FROM Products P
-        JOIN OrderDetails OD ON P.ProductID = OD.ProductID
-        GROUP BY P.Category
+        select P.Category,
+        sum(OD.Quantity * P.Price) TotalSalesAmount
+        from Products P
+        join OrderDetails OD on P.ProductID = OD.ProductID
+        group by P.Category
     """)
     return lst
     
 def percent_total_sales_cat():
     lst = execute_query("""
-        SELECT
-            P.Category,
-            SUM(OD.Quantity * P.Price) / (SELECT SUM(Quantity * Price) FROM OrderDetails) * 100 AS Percentage
-        FROM
-            Products P
-        JOIN
-            OrderDetails OD ON P.ProductID = OD.ProductID
-        GROUP BY
-            P.Category
+        select P.Category,
+        sum(OD.Quantity * P.Price) / (select sum(Quantity * Price) from OrderDetails) * 100 Percentage
+        FROM Products P
+        JOIN OrderDetails OD on P.ProductID = OD.ProductID
+        group by P.Category
     """)
     return lst
 
 def total_sales_date():
     lst = execute_query("""
-        SELECT
-            Orderdate,
-            SUM(TotalAmount) AS TotalSalesAmount
-        FROM
-            Orders
-        GROUP BY
-            Orderdate
+        SELECT Orderdate,
+        sum(TotalAmount) TotalSalesAmount
+        from Orders
+        group by Orderdate
     """)
     return lst
 
 def prod_qty():
     lst = execute_query("""
-        SELECT
-            P.ProductName,
-            SUM(OD.Quantity) AS TotalQuantitySold
-        FROM
-            Products P
-        JOIN
-            OrderDetails OD ON P.ProductID = OD.ProductID
-        GROUP BY
-            P.ProductName
-        ORDER BY
-            TotalQuantitySold DESC
+        select P.ProductName,
+        sum(OD.Quantity) TotalQuantitySold
+        from Products P
+        join OrderDetails OD on P.ProductID = OD.ProductID
+        group by P.ProductName
+        order by TotalQuantitySold desc
     """)
     return lst

@@ -6,6 +6,8 @@ from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
 from numeric_queries import *
+from visual_queries import *
+from visuals import *
 import time
 import datetime
 
@@ -609,11 +611,37 @@ def numeric_window():
     disp.pack(side = BOTTOM, anchor= "s",pady = 30)
     
     numeric.mainloop()
-    
+
+def pt():
+    x = []
+    y = []
+    g = gra.get()
+    t = typ.get()
+    if g == "total_sales_cat":
+        d = total_sales_cat()
+        print(d)
+    elif g == "total_sales_date":
+        d = total_sales_date()
+        print(d)
+    elif g == "percent_total_sales_cat":
+        d = percent_total_sales_cat()
+        print(d)
+    elif g == "prod_qty":
+        d = prod_qty()
+        print(d)
+    for i in d:
+        x.append(i[0])
+        y.append(float(i[1]))
+    print(x, y)
+    if typ == "horizontal bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis", "horizontal")
+    elif typ == "vertical bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis", "vertical")
+    elif typ == "pie chart":
+        pie_chart(x, y, "Visual Analysis")
 #Function to create a Visual Analysis Page
 def graph_window():
-    global l1v
-    global l2v
+    global gra
     global typ
     
     tps = ["horizontal bar graph", "vertical bar graph", "pie chart"]   
@@ -644,23 +672,17 @@ def graph_window():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
             graph.destroy()
-            
-      
-    l1v = StringVar()
-    l1v.set("First Array")
-    l2v = StringVar()
-    l2v.set("Second Array")
+
+    gra = StringVar()
+    gra.set("total_sales_cat")
     typ = StringVar()
     typ.set("horizontal bar graph")
     
     graph.title("Visual Analysis")
     title = Label(graph, text= 'Visual Analysis', font= 'Arial 35 bold',bg='#7676EE').pack(pady = 10)
-    l1 = Label(graph, text="Data List 1", font= "Arial 30", fg = "black").pack()
-    l1inp = OptionMenu(graph, l1v, *col.keys()).pack(expand = True)
-    l2 = Label(graph, text="Data List 2", font= "Arial 30", fg = "black").pack()
-    l2inp = OptionMenu(graph, l2v, *col.keys()).pack(expand = True)
-    l4 = Label(graph, text="Type of Graph", font= "Arial 30", fg = "black").pack()
-    l4inp = OptionMenu(graph, typ, *tps).pack(expand = True)
+    tsc = Radiobutton(graph, text = "Total Sales by Category", font = "Arial 25 bold", value = "total_sales_cat").pack()    
+    t = Label(graph, text="Type of Graph", font= "Arial 30", fg = "black").pack()
+    tinp = OptionMenu(graph, typ, *tps).pack(expand = True)
     Button(graph, text= "Plot", font = "Arial 20 bold", bg="skyblue", command=pt).pack()
     Button(graph, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")    
     Button(graph, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")    
