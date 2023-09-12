@@ -567,6 +567,17 @@ def numeric_window():
         for order in orders_by_date_category:
             print(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
             display(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
+
+    def dtord():
+        disp.delete("1.0", "end")
+        date = simpledialog.askstring(title="Enter Values",prompt="Date")
+        orders_by_date = get_orders_by_date(date)
+        log("Analytical Data Extracted")
+        print(f"\nOrders on '{date}':")
+        display(f"\nOrders on '{date}':")
+        for order in orders_by_date:
+            print(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
+            display(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
             
     def treveprod():
         disp.delete("1.0", "end")
@@ -604,6 +615,7 @@ def numeric_window():
     Button(numeric, text="Prodcat", command=cat_prods).pack()
     Button(numeric, text="Customer Highest Spent", command=hspentcust).pack()
     Button(numeric, text="Orders by Date and Category", command=dtcatord).pack()
+    Button(numeric, text="Orders by Date", command=dtord).pack()
     Button(numeric, text="Revenvue by Product", command=treveprod).pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")

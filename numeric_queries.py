@@ -94,6 +94,16 @@ def get_orders_by_date_and_category(date, category):
         """.format(date, category)
         return execute_query(query)
 
+def get_orders_by_date(date):
+        query = """
+        select Products.ProductName, Orders.OrderDate, OrderDetails.Quantity, OrderDetails.Subtotal
+        from Orders
+        join OrderDetails on Orders.OrderID = OrderDetails.OrderID
+        join Products on OrderDetails.ProductID = Products.ProductID
+        where Orders.OrderDate = '{}'
+        """.format(date)
+        return execute_query(query)
+
 def get_total_revenue_by_product():
         query = """
         select Products.ProductName, sum(OrderDetails.Subtotal) TotalRevenue
