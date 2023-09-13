@@ -17,12 +17,10 @@ for module, code in modules:
     except ImportError:
         exec(os.system(code))
 from PIL import Image, ImageTk, ImageDraw
-import numpy as np
 import matplotlib.pyplot as plt
 import SecuriPy
 import pandas as pd
 import mysql.connector as sqlcon
-
 from sql_scripts import *
 from visuals import *
 from windows import *

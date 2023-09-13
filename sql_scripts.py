@@ -109,7 +109,7 @@ def execute_query(query):
         cursor = conn.cursor()
         try:
             cursor.execute(query)
-            if query.strip().lower().startswith('insert'):
+            if query.strip().lower().startswith('insert') or query.strip().lower().startswith('delete'):
                 conn.commit()  # For insert queries, commit the transaction
                 log("Data Added to the Database")
             else:

@@ -14,4 +14,4 @@ for file in files:
         d = f.readlines()
         sum += len(d)
 
-print(sum, " lines and coding")
+print(sum, "lines and coding")
