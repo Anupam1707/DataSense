@@ -12,7 +12,7 @@ import time
 import datetime
 
 maintain_label = False
-
+acc = False
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -107,8 +107,6 @@ def signup_window():
     def signup_button():
         u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
         p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
-        print(u)
-        print(p)
         q = f"insert into users (username, password) values ('{u}', '{p}')"
         r = execute_query(q)
         log("New User Registered")
@@ -157,16 +155,22 @@ def login_window():
                 break
             else:
                 usr = -1
-        if password_entry.get() == SecuriPy.Text.decrypt(response[usr][1], "datasense"):
-            user = username_entry.get()
-            welcome = Label(login, text=f"Welcome back {username_entry.get()}", font="Arial 30", fg = "blue").pack()
-            login.destroy() 
-            home_window()
-        else:
-            error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
-            error_label.pack()
-        log(str(username_entry.get() + "logged in"))
-
+        try:
+            if password_entry.get() == SecuriPy.Text.decrypt(response[usr][1], "datasense"):
+                user = username_entry.get()
+                welcome = Label(login, text=f"Welcome back {username_entry.get()}", font="Arial 30", fg = "blue").pack()
+                login.destroy() 
+                home_window()
+            else:
+                error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
+                error_label.pack()
+            log(str(username_entry.get()) + "logged in")
+        except IndexError:
+            global a, acc
+            if not acc:
+                a = Label(login, text="No Account Found", font="Arial 30 bold", bg="red", fg="black")
+                a.pack(side = BOTTOM, anchor="s")
+                acc = True
     button = Button(login, text="Login", font = "Arial 30 bold", command=login_button).pack(side = TOP)
     Button(login, text = 'Exit', font = 'Arial 20 bold', bg='red', command=login.destroy).pack(side = BOTTOM,anchor = "se")
     sign = Button(login, text= "Sign UP Instead", font = "Arial 20 bold", bg="skyblue", command=switchs).pack(pady = 30)

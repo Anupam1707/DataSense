@@ -105,7 +105,7 @@ def execute_query(query):
         cursor = conn.cursor()
         try:
             cursor.execute(query)
-            if query.strip().lower().startswith('select'):
+            if query.strip().lower().startswith('select') or query.strip().lower().startswith('show'):
                 r = cursor.fetchall()
                 conn.commit()
                 log("Data Retrieved from the Database")
