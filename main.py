@@ -21,7 +21,10 @@ import matplotlib.pyplot as plt
 import SecuriPy
 import pandas as pd
 import mysql.connector as sqlcon
-from sql_scripts import *
-from visuals import *
-from windows import *
-welcome_window()
+try:
+    from sql_scripts import *
+    from visuals import *
+    from windows import *
+    welcome_window()
+except FileNotFoundError:
+    os.system("python installer.py")

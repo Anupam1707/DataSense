@@ -5,9 +5,9 @@ from tkinter import simpledialog
 connection = None
 
 
-user = simpledialog.askstring(title="Enter Values",prompt="Username")
-password = simpledialog.askstring(title="Enter Values",prompt="Password")
-host = simpledialog.askstring(title="Enter Values",prompt="Hostname")
+user = simpledialog.askstring(title="Enter Values",prompt="SQL Username")
+password = simpledialog.askstring(title="Enter Values",prompt="SQL Password")
+host = simpledialog.askstring(title="Enter Values",prompt="SQL Hostname")
 creds = [user + ",", password+",", host]
 with open("creds.tiak","w") as f:
     pass

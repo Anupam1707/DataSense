@@ -634,49 +634,45 @@ def numeric_window():
     coms = [custs, ordet, dtord, ordrng, dtcatord, custordet, custorcnt, cat_prods, prod_cats, cat_prods_cat, treveprod,
             highpprod, avgpricat, revcat, custtspent, hspentcust]
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
-        
+    for button in buttons:
+        button.pack()
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     disp = Text(numeric, width = 50, height = 11, font = ("Ink Free", 20), bg = "black", fg = "white")
     disp.pack(side = BOTTOM, anchor= "s",pady = 30)
     
     numeric.mainloop()
-def plot(xvals = [], yvals = [], t = ""):
+def plot(xvals=None, yvals=None, t=""):
+    if xvals is not None and yvals is not None:
         x = xvals
         y = yvals
-        if x == [] and y == [] and t == "":
-            g = gra.get()
-            t = typ.get()
-            if g == "total_sales_cat":
-                d = total_sales_cat()
-                print(d)
-            elif g == "total_sales_date":
-                d = total_sales_date()
-                print(d)
-            elif g == "percent_total_sales_cat":
-                d = percent_total_sales_cat()
-                print(d)
-            elif g == "prod_qty":
-                d = prod_qty()
-                print(d)
-            for i in d:
-                x.append(i[0])
-                y.append(float(i[1]))
-            print(x, y)
-            if t == "horizontal bar graph":
-                bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
-            elif t == "vertical bar graph":
-                bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
-            elif t == "pie chart":
-                pie_chart(x, y, "Visual Analysis\n Pie Chart")
-        else:
-            if t == "h":
-                bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
-            elif t == "v":
-                bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
-            elif t == "p":
-                pie_chart(xvals, yvals, "Visual Analysis\n Pie Chart")
-                
+    else:
+        x = []
+        y = []
+
+        g = gra.get()
+        t = typ.get()
+
+        if g == "total_sales_cat":
+            d = total_sales_cat()
+        elif g == "total_sales_date":
+            d = total_sales_date()
+        elif g == "percent_total_sales_cat":
+            d = percent_total_sales_cat()
+        elif g == "prod_qty":
+            d = prod_qty()
+
+        for i in d:
+            x.append(i[0])
+            y.append(float(i[1]))
+
+    if t == "horizontal bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
+    elif t == "vertical bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
+    elif t == "pie chart":
+        pie_chart(x, y, "Visual Analysis\nPie Chart")
+
 #Function to create a Visual Analysis Page
 def graph_window():
     global gra
