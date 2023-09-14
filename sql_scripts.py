@@ -39,7 +39,6 @@ def save_excel(table):
         try:
             cursor = conn.cursor()
             cursor.execute("USE datasense")
-            r = cursor.fetchall()
             query = f"SELECT * FROM {table}"
             try:
                 data = pd.read_sql(query, conn)
@@ -56,7 +55,6 @@ def save_csv(table):
         try:
             cursor = conn.cursor()
             cursor.execute("USE datasense")
-            r = cursor.fetchall()
             query = f"SELECT * FROM {table}"
             try:
                 data = pd.read_sql(query, conn)
@@ -73,7 +71,6 @@ def custom_query_save_csv(query):
         try:
             cursor = conn.cursor()
             cursor.execute("USE datasense")
-            r = cursor.fetchall()
             try:
                 data = pd.read_sql(query, conn)
                 data.to_csv("Custom Table.csv", index=False)
@@ -89,7 +86,6 @@ def custom_query_save_excel(query):
         try:
             cursor = conn.cursor()
             cursor.execute("USE datasense")
-            r = cursor.fetchall()
             try:
                 data = pd.read_sql(query, conn)
                 data.to_excel("Custom Table.xlsx", index=False)
@@ -109,12 +105,13 @@ def execute_query(query):
         cursor = conn.cursor()
         try:
             cursor.execute(query)
-            if query.strip().lower().startswith('insert') or query.strip().lower().startswith('delete'):
-                conn.commit()  # For insert queries, commit the transaction
-                log("Data Added to the Database")
-            else:
-                r = cursor.fetchall()  # For other queries, fetch the results
+            if query.strip().lower().startswith('select'):
+                r = cursor.fetchall()
                 conn.commit()
+                log("Data Retrieved from the Database")
                 return r
+            else:
+                conn.commit()  # For insert queries, commit the transaction
+                log("Data Modified in the Database")
         except mysql.connector.Error as err:
             print("Error:", err)

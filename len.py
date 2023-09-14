@@ -1,4 +1,4 @@
-files = ["db_installer.py",
+files = ["installer.py",
          "main.py",
          "sql_scripts.py",
          "visuals.py",

@@ -65,12 +65,27 @@ def get_order_details(order_id):
         """.format(order_id)
         return execute_query(query)
 
-def get_products_in_category(category):
+def get_products_in_category_cat(category):
         query = """
         select ProductName, Price
         from Products
         where Category = '{}'
         """.format(category)
+        return execute_query(query)
+
+def get_products_in_category():
+        query = """
+        select ProductName, Price
+        from Products
+        """
+        return execute_query(query)
+
+def get_customer_details(custid):
+        query = """
+        select *
+        from Customers
+        where customerid = {}
+        """.format(custid)
         return execute_query(query)
 
 def get_customers_with_highest_spending():
