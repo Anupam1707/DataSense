@@ -1,3 +1,4 @@
+
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
@@ -52,6 +53,9 @@ def home_window():
     def switchn():
         home.destroy()
         numeric_window()
+    def switchab():
+        home.destroy()
+        about_window()
     def switche():
         home.destroy()
         export_window()
@@ -75,7 +79,7 @@ def home_window():
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=20)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=20)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=20)
-    Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=maintain).pack(pady=20)
+    Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=switchab).pack(pady=20)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
     
@@ -164,7 +168,7 @@ def login_window():
             else:
                 error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
                 error_label.pack()
-            log(str(username_entry.get()) + "logged in")
+            log(str(username_entry.get() + " " + "logged in"))
         except IndexError:
             global a, acc
             if not acc:
@@ -412,6 +416,7 @@ def welcome_window():
             welcome.destroy()
     Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady=50)
     Button(welcome, text = "Create Account", font = "Arial 30 bold", command=switchs).pack(side = LEFT, anchor = "sw")
+    Label(welcome, text = "OR", font = ("MV Boli", 30)).pack(pady = 10, side = LEFT, anchor = "sw")
     Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     
@@ -439,11 +444,6 @@ def numeric_window():
     def switchh():
         numeric.destroy()
         home_window()
-        
-    def empty_home():
-        tren.pack_forget()
-        pop.pack_forget()
-        most.pack_forget()
 
     def prod_cats():
         product_categories = get_product_categories()
@@ -626,13 +626,12 @@ def numeric_window():
 
     Label(numeric, text='Numeric Analysis', font='Arial 35 bold', bg='#7676EE').pack(pady = 20)
 
-    bts = ["Customer Details", "Order Details", "Orders by Date", "Orders between Dates", "Orders by Date and Category",
+    bts = ["Customer Details", "Customer Total Spent", "Customer Highest Spent", "Order Details", "Orders by Date", "Orders between Dates", "Orders by Date and Category",
            "Customer Orders", "Customer Orders Count", "Products", "Categories", "Products in a Category",
-           "Revenue by Product", "High Priced Product", "Average Product Price", "Revenue by Category",
-           "Customer Total Spent", "Customer Highest Spent"]
+           "Revenue by Product", "High Priced Product", "Average Product Price", "Revenue by Category"]
     
-    coms = [custs, ordet, dtord, ordrng, dtcatord, custordet, custorcnt, cat_prods, prod_cats, cat_prods_cat, treveprod,
-            highpprod, avgpricat, revcat, custtspent, hspentcust]
+    coms = [custs, custtspent, hspentcust, ordet, dtord, ordrng, dtcatord, custordet, custorcnt, cat_prods, prod_cats, cat_prods_cat, treveprod,
+            highpprod, avgpricat, revcat]
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
     for button in buttons:
         button.pack()
@@ -642,6 +641,7 @@ def numeric_window():
     disp.pack(side = BOTTOM, anchor= "s",pady = 30)
     
     numeric.mainloop()
+    
 def plot(xvals=None, yvals=None, t=""):
     if xvals is not None and yvals is not None:
         x = xvals
@@ -751,43 +751,85 @@ def export_window():
         if result == True:
             export.destroy()
             
-    
     def switch():
         export.destroy()
         home_window()
 
-    def switchg():
-        export.destroy()
-        graph_window()
-        
-    def returnn():
-        n.pack(pady = 10)
-        v.pack(pady = 10)
     
-    def num():
-        n.pack_forget()
-        v.pack_forget()
+    def switchh():
+        export.destroy()
+        export_window()
 
-        def switchh():
-            export.destroy()
-            export_window()
-
-        csvexp = Button(export, text = "Export as CSV", font = "Arial 20 bold", bg = "skyblue",
-                        command = lambda : save_csv(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
-        csvexp.pack(pady = 10)
-        excelexp = Button(export, text = "Export as Spreadsheet", font = "Arial 20 bold", bg = "skyblue",
-                          command = lambda : save_excel(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
-        excelexp.pack(pady = 10)
-        custc = Button(export, text = "Custom Query (CSV)", font = "Arial 20 bold", bg = "skyblue",
-                      command = lambda : custom_query_save_csv(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
-        custc.pack(pady = 10)
-        custe = Button(export, text = "Custom Query (Spreadsheet)", font = "Arial 20 bold", bg = "skyblue",
-                      command = lambda : custom_query_save_excel(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
-        custe.pack(pady = 10)
+    csvexp = Button(export, text = "Export as CSV", font = "Arial 20 bold", bg = "skyblue",
+                    command = lambda : save_csv(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
+    csvexp.pack(pady = 10)
+    excelexp = Button(export, text = "Export as Spreadsheet", font = "Arial 20 bold", bg = "skyblue",
+                      command = lambda : save_excel(simpledialog.askstring(title="Enter Values",prompt="Table Name")))
+    excelexp.pack(pady = 10)
+    custc = Button(export, text = "Custom Query (CSV)", font = "Arial 20 bold", bg = "skyblue",
+                   command = lambda : custom_query_save_csv(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
+    custc.pack(pady = 10)
+    custe = Button(export, text = "Custom Query (Spreadsheet)", font = "Arial 20 bold", bg = "skyblue",
+                   command = lambda : custom_query_save_excel(simpledialog.askstring(title="Enter Values",prompt="Enter Your Query")))
+    custe.pack(pady = 10)
                       
-    n = Button(export, text = "Numeric Export", font = "Arial 20 bold", bg = "skyblue", command=num)
-    n.pack(pady = 10)
-    v = Button(export, text = "Visual Export", font = "Arial 20 bold", bg = "skyblue", command=switchg)
-    v.pack(pady = 10)
     Button(export, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")    
     Button(export, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")
+    Button(export, text = "Refresh", font = "Arial 20 bold", bg = "red", command = switchh).pack(side = LEFT, anchor = "sw")
+
+def about_window():
+    about = Tk()
+    about.attributes('-fullscreen', True)
+    about.overrideredirect(True)
+
+    frame = Frame(about)
+    frame.pack(padx=40, pady=40, fill=BOTH, expand=True)
+
+    monospaced_font = ("Courier", 20)
+
+    about_text = Text(frame, wrap=WORD, font=monospaced_font)
+    about_text.pack(fill=BOTH, expand=True)
+
+    about_content = """
+    About DataSense
+
+    DataSense is a project I developed as part of my class 12 coursework.
+    It's a Python application designed to help with data analysis, database management, and data security.
+
+    Purpose of DataSense
+    
+    I created this project to explore data-related tasks and improve my programming skills.
+    While it may not be overly complex, I believe it showcases my passion for coding and problem-solving.
+
+    Key Features
+
+    - Data Analysis: This feature allows you to analyze data and create simple visualizations.
+    - Database Management: You can interact with SQL databases, exporting and modifying data.
+    - Security: I've included basic security measures to protect data using a custom library called SecuriPy.
+
+    Developer
+
+    I am the sole developer behind this project. It's been a valuable learning experience,
+    and I'm excited to present it as part of my class 12 coursework.
+
+    Conclusion
+
+    Thank you for taking the time to explore DataSense. While it may not be a grand project,
+    I hope it reflects my dedication to learning and my passion for programming.
+    """
+
+    about_text.insert(END, about_content)
+
+    def switchh():
+        about.destroy()
+        home_window()
+        
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            about.destroy()
+
+    Button(about, text="Back", font="Arial 20 bold", bg="red", command=switchh).pack(side=LEFT, anchor="sw")
+    Button(about, text="Exit", font="Arial 20 bold", bg="red", command=quit).pack(side=RIGHT, anchor="se")
+
+    about.mainloop()

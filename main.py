@@ -28,3 +28,7 @@ try:
     welcome_window()
 except FileNotFoundError:
     os.system("python installer.py")
+    from sql_scripts import *
+    from visuals import *
+    from windows import *
+    welcome_window()
