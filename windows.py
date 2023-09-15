@@ -14,6 +14,7 @@ import datetime
 
 maintain_label = False
 acc = False
+lnlb = False
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -88,6 +89,7 @@ def home_window():
 #Function to create a Signup Page
 def signup_window():
     global maintain_label
+    lnlb = False
     maintain_label = False
     signup = Tk()
     signup.title("Login")
@@ -96,6 +98,13 @@ def signup_window():
     def switchlog():
         signup.destroy()
         login_window()
+
+    def lenlabel():
+        global lnlb
+        if not lnlb:
+            l = Label(signup, text="Invalid Password", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            lnlb = True
     
     title = Label(signup, text="Data Sense Signup", font = "Arial 40 bold",bg = "black", fg = "white").pack(pady = 50)
     username_label = Label(signup, text="Username", font = "Arial 35 bold")
@@ -107,16 +116,22 @@ def signup_window():
     password_label.pack(side = TOP)
     password_entry = Entry(signup, show="*", font = "Arial 30 bold")
     password_entry.pack(side = TOP)
-           
+    cond = Text(signup, font="Arial 20 bold", height=1, width=23)
+    cond.pack(pady = 20)
+    cond.insert(END, "Minimum 8 - 10 Characters")
+    
     def signup_button():
-        u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
-        p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
-        q = f"insert into users (username, password) values ('{u}', '{p}')"
-        r = execute_query(q)
-        log("New User Registered")
-        signup.destroy()
-        home_window()
-        
+        if len(password_entry.get()) >= 8 and len(password_entry.get()) <= 10:
+            u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
+            p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
+            q = f"insert into users (username, password) values ('{u}', '{p}')"
+            r = execute_query(q)
+            log("New User Registered")
+            signup.destroy()
+            home_window()
+        else:
+          lenlabel()
+          
     button = Button(signup, text="SignUP", font = "Arial 30 bold", command=signup_button).pack(side = TOP)
     Button(signup, text = 'Exit', font = 'Arial 20 bold', bg='red', command=signup.destroy).pack(side = RIGHT,anchor = "se")
     Button(signup, text = 'Go Back', font = 'Arial 20 bold', bg='red', command=switchlog).pack(side = LEFT,anchor = "sw")
@@ -793,8 +808,9 @@ def about_window():
     about_content = """
     About DataSense
 
-    DataSense is a project I developed as part of my class 12 coursework.
-    It's a Python application designed to help with data analysis, database management, and data security.
+    DataSense is a project I developed as part of my class XII coursework.
+    It's a Python application designed to help with data analysis, database management,
+    and data security.
 
     Purpose of DataSense
     
