@@ -15,6 +15,7 @@ import datetime
 maintain_label = False
 acc = False
 lnlb = False
+uname = False
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -98,14 +99,23 @@ def signup_window():
     def switchlog():
         signup.destroy()
         login_window()
-
+        
+    accounts = [SecuriPy.Text.decrypt(usernm[0], "datasense") for usernm in execute_query("select username from users")]
+    
     def lenlabel():
         global lnlb
         if not lnlb:
             l = Label(signup, text="Invalid Password", font="Arial 30 bold", bg="red", fg="black")
             l.pack(side = BOTTOM, anchor="s")
             lnlb = True
-    
+            
+    def unlabel():
+        global uname
+        if not uname:
+            l = Label(signup, text="Username Already Used", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            uname = True
+            
     title = Label(signup, text="Data Sense Signup", font = "Arial 40 bold",bg = "black", fg = "white").pack(pady = 50)
     username_label = Label(signup, text="Username", font = "Arial 35 bold")
     username_label.pack(anchor="center")
@@ -121,16 +131,19 @@ def signup_window():
     cond.insert(END, "Minimum 8 - 10 Characters")
     
     def signup_button():
-        if len(password_entry.get()) >= 8 and len(password_entry.get()) <= 10:
-            u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
-            p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
-            q = f"insert into users (username, password) values ('{u}', '{p}')"
-            r = execute_query(q)
-            log("New User Registered")
-            signup.destroy()
-            home_window()
+        if username_entry.get() not in accounts:
+            if len(password_entry.get()) >= 8 and len(password_entry.get()) <= 10:
+                u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
+                p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
+                q = f"insert into users (username, password) values ('{u}', '{p}')"
+                r = execute_query(q)
+                log("New User Registered")
+                signup.destroy()
+                home_window()
+            else:
+              lenlabel()
         else:
-          lenlabel()
+            unlabel()
           
     button = Button(signup, text="SignUP", font = "Arial 30 bold", command=signup_button).pack(side = TOP)
     Button(signup, text = 'Exit', font = 'Arial 20 bold', bg='red', command=signup.destroy).pack(side = RIGHT,anchor = "se")
