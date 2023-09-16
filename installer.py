@@ -6,9 +6,9 @@ connection = None
 
 
 user = simpledialog.askstring(title="Enter Values",prompt="SQL Username")
-if user is not None:
-    password = simpledialog.askstring(title="Enter Values",prompt="SQL Password", show = "*")
-    host = simpledialog.askstring(title="Enter Values",prompt="SQL Hostname")
+password = simpledialog.askstring(title="Enter Values",prompt="SQL Password", show = "*")
+host = simpledialog.askstring(title="Enter Values",prompt="SQL Hostname")
+if user is not None and password is not None and host is not None:
     creds = [user + ",", password+",", host]
     with open("creds.tiak","w") as f:
         pass
