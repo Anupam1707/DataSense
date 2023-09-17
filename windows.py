@@ -132,7 +132,7 @@ def signup_window():
     
     def signup_button():
         if username_entry.get() not in accounts:
-            if len(password_entry.get()) >= 8 and len(password_entry.get()) <= 10:
+            if len(password_entry.get()) >= 8:
                 u = SecuriPy.Text.encrypt(username_entry.get(), "datasense")
                 p = SecuriPy.Text.encrypt(password_entry.get(), "datasense")
                 q = f"insert into users (username, password) values ('{u}', '{p}')"
@@ -190,13 +190,12 @@ def login_window():
         try:
             if password_entry.get() == SecuriPy.Text.decrypt(response[usr][1], "datasense"):
                 user = username_entry.get()
-                welcome = Label(login, text=f"Welcome back {username_entry.get()}", font="Arial 30", fg = "blue").pack()
                 login.destroy() 
                 home_window()
             else:
                 error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
                 error_label.pack()
-            log(str(username_entry.get() + " " + "logged in"))
+            log(username_entry.get() + " " + "logged in")
         except IndexError:
             global a, acc
             if not acc:
