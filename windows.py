@@ -424,7 +424,7 @@ def welcome_window():
     gtest = ImageTk.PhotoImage(grimg)
     bkgr = Label(image=gtest)
     bkgr.image = gtest
-    bkgr.place(x=60, y=180)
+    bkgr.place(x=60, y=420)
     
     def switchl():
         welcome.destroy()
@@ -438,7 +438,17 @@ def welcome_window():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
             welcome.destroy()
-    Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady=50)
+    Label(welcome, text = "Welcome to DataSense", font = "Arial 40 bold",bg = "#0d1133", fg = "white").pack(pady = 10)
+    t = Text(welcome, width = 75, height = 7, font = ("Ink Free", 26), bg = "#0d1133", fg = "white")
+    t.pack()
+    t.insert(INSERT, "Our Data Analysis App is a powerful tool designed to simplify and \
+enhance your data-driven decision-making. With our intuitive user interface,\
+you can effortlessly plot graphs and perform complex numeric analyses, \
+unlocking valuable insights from your data. Whether you're a data enthusiast,\
+business professional, or a researcher, our app provides a user-friendly platform\
+to visualize and understand your data like never before.\n\
+Start your journey towards data-driven excellence with our Data Analysis App.\n\
+Create and Account today! Already have it? Then Happy Analysis!!")
     Button(welcome, text = "Create Account", font = "Arial 30 bold", command=switchs).pack(side = LEFT, anchor = "sw")
     Label(welcome, text = "OR", font = ("MV Boli", 30)).pack(pady = 10, side = LEFT, anchor = "sw")
     Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
