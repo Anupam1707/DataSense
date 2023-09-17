@@ -105,7 +105,7 @@ def signup_window():
     def lenlabel():
         global lnlb
         if not lnlb:
-            l = Label(signup, text="Invalid Password", font="Arial 30 bold", bg="red", fg="black")
+            l = Label(signup, text="Minimum 8 Characters Please", font="Arial 30 bold", bg="red", fg="black")
             l.pack(side = BOTTOM, anchor="s")
             lnlb = True
             
@@ -126,9 +126,6 @@ def signup_window():
     password_label.pack(side = TOP)
     password_entry = Entry(signup, show="*", font = "Arial 30 bold")
     password_entry.pack(side = TOP)
-    cond = Text(signup, font="Arial 20 bold", height=1, width=23)
-    cond.pack(pady = 20)
-    cond.insert(END, "Minimum 8 - 10 Characters")
     
     def signup_button():
         if username_entry.get() not in accounts:
