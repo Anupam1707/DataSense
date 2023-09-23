@@ -1,8 +1,8 @@
-
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
 from tkinter import messagebox, simpledialog
+from tkcalendar import Calendar
 from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
@@ -10,7 +10,7 @@ from numeric_queries import *
 from visual_queries import *
 from visuals import *
 import time
-import datetime
+from datetime import datetime
 
 maintain_label = False
 acc = False
@@ -105,7 +105,7 @@ def signup_window():
     def lenlabel():
         global lnlb
         if not lnlb:
-            l = Label(signup, text="Minimum 8 Characters Please", font="Arial 30 bold", bg="red", fg="black")
+            l = Label(signup, text="Minimum 8 Characters Required", font="Arial 30 bold", bg="red", fg="black")
             l.pack(side = BOTTOM, anchor="s")
             lnlb = True
             
@@ -455,6 +455,8 @@ Create and Account today! Already have it? Then Happy Analysis!!")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     
 def numeric_window():
+    global selected_date  # Global variable to store the selected date
+
     numeric = Tk()
     global ct
     screen_width = numeric.winfo_screenwidth()
@@ -463,9 +465,26 @@ def numeric_window():
     y = (screen_height) // 2
 
     numeric.title("Numeric Analysis")
-    numeric.attributes("-fullscreen",True)
+    numeric.attributes("-fullscreen", True)
     numeric.overrideredirect(True)
 
+    def date_picker(title):
+        global cal, popup, selected_date
+        popup = Toplevel(numeric)
+        popup.title(title)
+        popup.geometry("300x300")
+
+        def get_selected_date():
+            nonlocal selected_date
+            selected_date = cal.get_date()
+            popup.destroy()
+            dt = selected_date.split("/")
+            selected_date = "-".join(dt)
+
+        cal = Calendar(popup, selectmode="day")
+        cal.pack(pady=20)
+        Button(popup, text="Select Date", command=get_selected_date).pack()
+        
     def quit():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
@@ -617,7 +636,7 @@ def numeric_window():
             display(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
 
     def dtcatord():
-        date = simpledialog.askstring(title="Enter Values",prompt="Date")
+        date = date_picker("Date")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
         orders_by_date_category = get_orders_by_date_and_category(date, category)
         log("Analytical Data Extracted")
@@ -654,9 +673,7 @@ def numeric_window():
     test = ImageTk.PhotoImage(img)
     bk = Label(image=test)
     bk.image = test
-    bk.place(x=-2, y=-2)
-
-    
+    bk.place(x=-2, y=-2)    
 
     Label(numeric, text='Numeric Analysis', font='Arial 35 bold', bg='#7676EE').pack(pady = 20)
 
@@ -669,6 +686,10 @@ def numeric_window():
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
     for button in buttons:
         button.pack()
+        
+    cal = Calendar(numeric, selectmode = 'day')
+    cal.pack(pady = 20)
+
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     disp = Text(numeric, width = 50, height = 11, font = ("Ink Free", 20), bg = "black", fg = "white")
