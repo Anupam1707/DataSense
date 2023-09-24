@@ -475,7 +475,7 @@ def numeric_window():
         popup.geometry("300x300")
 
         def get_selected_date():
-            nonlocal selected_date
+            selected_date
             selected_date = cal.get_date()
             popup.destroy()
             dt = selected_date.split("/")
@@ -541,8 +541,10 @@ def numeric_window():
             display(f"Customer: {customer[0]}, Order Count: {customer[1]}")
                     
     def ordrng():
-        start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
-        end_date = simpledialog.askstring(title="Enter Values",prompt="End Date (YYYY-MM-DD)")
+        date_picker("Start Date")
+        start_date = selected_date
+        date_picker("End Date")
+        end_date = selected_date
         orders_in_date_range = get_orders_in_date_range(start_date, end_date)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -636,8 +638,8 @@ def numeric_window():
             display(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
 
     def dtcatord():
-        date = date_picker("Date")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
+        date_picker("Select a Date")
         orders_by_date_category = get_orders_by_date_and_category(date, category)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -648,7 +650,7 @@ def numeric_window():
             display(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
 
     def dtord():
-        date = simpledialog.askstring(title="Enter Values",prompt="Date")
+        date_picker("Select a Date")
         orders_by_date = get_orders_by_date(date)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -686,10 +688,7 @@ def numeric_window():
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
     for button in buttons:
         button.pack()
-        
-    cal = Calendar(numeric, selectmode = 'day')
-    cal.pack(pady = 20)
-
+    
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     disp = Text(numeric, width = 50, height = 11, font = ("Ink Free", 20), bg = "black", fg = "white")
