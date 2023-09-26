@@ -95,7 +95,16 @@ def signup_window():
     signup = Tk()
     signup.title("Login")
     signup.attributes('-fullscreen', True)
-
+    
+    screen_width = signup.winfo_screenwidth()
+    screen_height = signup.winfo_screenheight()
+    img = Image.open("images/signup.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x = -2, y = -2)
+    
     def switchlog():
         signup.destroy()
         login_window()
@@ -164,6 +173,15 @@ def login_window():
     login.title("Login")
     login.attributes('-fullscreen', True)
 
+    screen_width = login.winfo_screenwidth()
+    screen_height = login.winfo_screenheight()
+    img = Image.open("images/login.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x = -2, y = -2)
+    
     title = Label(login, text="Data Sense Login", font = "Arial 40 bold",bg = "black", fg = "white").pack(pady = 50)
     username_label = Label(login, text="Username", font = "Arial 35 bold")
     username_label.pack(anchor="center")
