@@ -8,7 +8,6 @@ modules = [
     ("import SecuriPy", "pip install SecuriPy"),
     ("import pandas as pd","pip install pandas"),
     ("import mysql.connector as sqlcon", "pip install mysql-connector"),
-    ("from tkcalendar import Calendar", "pip install tkcalendar"),
     ("from datetime import datetime", "pip install datetime")
 ]
 

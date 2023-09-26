@@ -1,8 +1,8 @@
+
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
 from tkinter import messagebox, simpledialog
-from tkcalendar import Calendar
 from PIL import Image, ImageTk
 import pandas as pd
 from sql_scripts import *
@@ -10,7 +10,7 @@ from numeric_queries import *
 from visual_queries import *
 from visuals import *
 import time
-from datetime import datetime
+import datetime
 
 maintain_label = False
 acc = False
@@ -105,7 +105,7 @@ def signup_window():
     def lenlabel():
         global lnlb
         if not lnlb:
-            l = Label(signup, text="Minimum 8 Characters Required", font="Arial 30 bold", bg="red", fg="black")
+            l = Label(signup, text="Minimum 8 Characters Please", font="Arial 30 bold", bg="red", fg="black")
             l.pack(side = BOTTOM, anchor="s")
             lnlb = True
             
@@ -424,7 +424,7 @@ def welcome_window():
     gtest = ImageTk.PhotoImage(grimg)
     bkgr = Label(image=gtest)
     bkgr.image = gtest
-    bkgr.place(x=60, y=420)
+    bkgr.place(x=(int(screen_width/2) - int(screen_width/6)), y=420)
     
     def switchl():
         welcome.destroy()
@@ -455,8 +455,6 @@ Create and Account today! Already have it? Then Happy Analysis!!")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     
 def numeric_window():
-    global selected_date  # Global variable to store the selected date
-
     numeric = Tk()
     global ct
     screen_width = numeric.winfo_screenwidth()
@@ -465,26 +463,9 @@ def numeric_window():
     y = (screen_height) // 2
 
     numeric.title("Numeric Analysis")
-    numeric.attributes("-fullscreen", True)
+    numeric.attributes("-fullscreen",True)
     numeric.overrideredirect(True)
 
-    def date_picker(title):
-        global cal, popup, selected_date
-        popup = Toplevel(numeric)
-        popup.title(title)
-        popup.geometry("300x300")
-
-        def get_selected_date():
-            selected_date
-            selected_date = cal.get_date()
-            popup.destroy()
-            dt = selected_date.split("/")
-            selected_date = "-".join(dt)
-
-        cal = Calendar(popup, selectmode="day")
-        cal.pack(pady=20)
-        Button(popup, text="Select Date", command=get_selected_date).pack()
-        
     def quit():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
@@ -541,10 +522,8 @@ def numeric_window():
             display(f"Customer: {customer[0]}, Order Count: {customer[1]}")
                     
     def ordrng():
-        date_picker("Start Date")
-        start_date = selected_date
-        date_picker("End Date")
-        end_date = selected_date
+        start_date = simpledialog.askstring(title="Enter Values",prompt="Start Date (YYYY-MM-DD)")
+        end_date = simpledialog.askstring(title="Enter Values",prompt="End Date (YYYY-MM-DD)")
         orders_in_date_range = get_orders_in_date_range(start_date, end_date)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -638,8 +617,8 @@ def numeric_window():
             display(f"Customer: {customer[0]}, Total Spent: {customer[1]}")
 
     def dtcatord():
+        date = simpledialog.askstring(title="Enter Values",prompt="Date")
         category = simpledialog.askstring(title="Enter Values",prompt="Category")
-        date_picker("Select a Date")
         orders_by_date_category = get_orders_by_date_and_category(date, category)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -650,7 +629,7 @@ def numeric_window():
             display(f"Product Name: {order[0]}, \nOrder Date: {order[1]}, \nQuantity: {order[2]}, \nSubtotal: {order[3]}")
 
     def dtord():
-        date_picker("Select a Date")
+        date = simpledialog.askstring(title="Enter Values",prompt="Date")
         orders_by_date = get_orders_by_date(date)
         log("Analytical Data Extracted")
         disp.delete("1.0", "end")
@@ -675,7 +654,9 @@ def numeric_window():
     test = ImageTk.PhotoImage(img)
     bk = Label(image=test)
     bk.image = test
-    bk.place(x=-2, y=-2)    
+    bk.place(x=-2, y=-2)
+
+    
 
     Label(numeric, text='Numeric Analysis', font='Arial 35 bold', bg='#7676EE').pack(pady = 20)
 
@@ -688,7 +669,6 @@ def numeric_window():
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
     for button in buttons:
         button.pack()
-    
     Button(numeric, text='Exit', font='Arial 20 bold', bg='red', command=quit).pack(side = RIGHT, anchor = "se")
     Button(numeric, text='Home', font='Arial 20 bold', bg='red', command=switchh).pack(side = LEFT, anchor = "sw")
     disp = Text(numeric, width = 50, height = 11, font = ("Ink Free", 20), bg = "black", fg = "white")
@@ -851,11 +831,6 @@ def about_window():
     It's a Python application designed to help with data analysis, database management,
     and data security.
 
-    Purpose of DataSense
-    
-    I created this project to explore data-related tasks and improve my programming skills.
-    While it may not be overly complex, I believe it showcases my passion for coding and problem-solving.
-
     Key Features
 
     - Data Analysis: This feature allows you to analyze data and create simple visualizations.
@@ -864,12 +839,11 @@ def about_window():
 
     Developer
 
-    I am the sole developer behind this project. It's been a valuable learning experience,
-    and I'm excited to present it as part of my class 12 coursework.
+    I am the sole developer behind this project.
 
     Conclusion
 
-    Thank you for taking the time to explore DataSense. While it may not be a grand project,
+    Thank you for taking the time to explore DataSense.
     I hope it reflects my dedication to learning and my passion for programming.
     """
 
