@@ -1,4 +1,3 @@
-
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
@@ -144,6 +143,7 @@ def signup_window():
                 q = f"insert into users (username, password) values ('{u}', '{p}')"
                 r = execute_query(q)
                 log("New User Registered")
+                messagebox.showinfo("Information", f"User {username_entry.get()} signed up successfully")
                 signup.destroy()
                 home_window()
             else:
