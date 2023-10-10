@@ -15,6 +15,7 @@ maintain_label = False
 acc = False
 lnlb = False
 uname = False
+
 #Function to create a Home Page
 def home_window():
     global maintain_label
@@ -75,11 +76,12 @@ def home_window():
         
     Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=20)
-    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=20)
+    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=update_window).pack(pady=20)
     Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=20)
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=20)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=20)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=20)
+    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=maintain).pack(pady=20)
     Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=switchab).pack(pady=20)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
@@ -222,6 +224,7 @@ def login_window():
     sign = Button(login, text= "Sign UP Instead", font = "Arial 20 bold", bg="skyblue", command=switchs).pack(pady = 30)
     login.mainloop()
 
+#Function to create a Window to Add Data
 def add_window():
     global maintain_label
     maintain_label = False
@@ -423,6 +426,47 @@ def add_window():
     Button(add, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     add.mainloop()
     
+#Function to create a Window to Update Data
+def update_window():
+    update = Tk()
+    screen_width = update.winfo_screenwidth()
+    screen_height = update.winfo_screenheight()
+    update.title("Update Window")
+    update.attributes("-fullscreen", True)
+    
+    img = Image.open("images/update.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x=-2, y=-2)
+    
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            update.destroy()
+
+    def maintain():
+        global l, maintain_label
+        if not maintain_label:
+            l = Label(update, text="Feature Under Development", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            maintain_label = True
+
+    def ad():
+        update.destroy()
+        update_window()
+
+    def switchh():
+        update.destroy()
+        home_window()
+
+    Button(update, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(update, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
+    Button(update, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
+    update.mainloop()
+    
+#Function to create a Welcome page
 def welcome_window():
     welcome = Tk()
     screen_width = welcome.winfo_screenwidth()
@@ -472,6 +516,7 @@ Create and Account today! Already have it? Then Happy Analysis!!")
     Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     
+#Function to create a Numeric Analysis Page
 def numeric_window():
     numeric = Tk()
     global ct
@@ -694,6 +739,7 @@ def numeric_window():
     
     numeric.mainloop()
     
+#Function to plot graphs
 def plot(xvals=None, yvals=None, t=""):
     if xvals is not None and yvals is not None:
         x = xvals
@@ -776,6 +822,7 @@ def graph_window():
     Button(graph, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")    
     graph.mainloop()
 
+#Function to create a Export Data Page
 def export_window():
     export  = Tk()
     screen_width = export.winfo_screenwidth()
@@ -829,6 +876,7 @@ def export_window():
     Button(export, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")
     Button(export, text = "Refresh", font = "Arial 20 bold", bg = "red", command = switchh).pack(side = LEFT, anchor = "sw")
 
+#Function to create a About Page
 def about_window():
     about = Tk()
     about.attributes('-fullscreen', True)
