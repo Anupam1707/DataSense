@@ -461,16 +461,18 @@ def update_window():
         update.destroy()
         home_window()
     
-    def new_cust():
+    def cust_det():
         global maintain_label
         maintain_label = False
         def submit_data():
             r = execute_query("select customerid from customers")
-            idl = r[-1][0]
-            print(idl+1, firstname.get(), lastname.get(), email.get(), address.get())
-            q = "insert into customers values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
+            print(cd.get(), firstname.get(), lastname.get(), email.get(), address.get())
+            q = "update customers set FirstName = '{}', LastName = '{}', Email = '{}', Address = '{}' where CustomerID = {}".format(
+                firstname.get(), lastname.get(), email.get(), address.get(), cd.get())
             resp = execute_query(q)
 
+            cid.pack_forget()
+            cd.pack_forget()
             fn.pack_forget()
             firstname.pack_forget()
             ln.pack_forget()
@@ -481,42 +483,94 @@ def update_window():
             address.pack_forget()
             sub.pack_forget()
 
-            success = Label(add, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success = Label(update, text = "Data Updated Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
             success.pack(anchor = CENTER)
             
         c.pack_forget()
         p.pack_forget()
-        o.pack_forget()
         try:
             l.pack_forget()
         except:
             pass
-        fn = Label(add, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        cid = Label(update, text = "Customer ID", font = "Arial 20 bold", bg = "#090c39", fg = "white")
+        cid.pack(padx = 320, pady = 20)
+        cd = Entry(update, font = "Arial 20 bold")
+        cd.pack(padx = 0, pady = 0)
+        fn = Label(update, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         fn.pack(padx = 30, pady = 20)
-        firstname = Entry(add, font = "Arial 20 bold")
+        firstname = Entry(update, font = "Arial 20 bold")
         firstname.pack(padx = 0, pady= 0)
-        ln = Label(add, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ln = Label(update, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         ln.pack(padx = 30, pady = 20)
-        lastname = Entry(add, font = "Arial 20 bold")
+        lastname = Entry(update, font = "Arial 20 bold")
         lastname.pack(padx = 0,pady= 0)
-        em = Label(add, text="Email Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        em = Label(update, text="Email address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         em.pack(padx = 30, pady = 20)
-        email = Entry(add, font = "Arial 20 bold")
+        email = Entry(update, font = "Arial 20 bold")
         email.pack(padx = 0,pady= 0)
-        ad = Label(add, text="Home Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ad = Label(update, text="Home Address", font = "Arial 20 bold",bg = "#090c39", fg = "white")
         ad.pack(padx = 30, pady = 20)
-        address = Entry(add, font = "Arial 20 bold")
+        address = Entry(update, font = "Arial 20 bold")
         address.pack(padx = 0,pady= 0)
-        sub = Button(add, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub = Button(update, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
         sub.pack(pady=5)
+        
+    def prod_det():
+        global maintain_label
+        maintain_label = False
+        categ = StringVar()
+        categ.set("Category")
+        cats = [c[0] for c in execute_query("select distinct(category) from products")]
+        def submit_data():
+            r = execute_query("select productid from products")
+            print(pd.get(), prodname.get(), categ.get(), amt.get())
+            q = "update products set ProductName = '{}', Category = '{}', Price = {} where ProductID = {}".format(
+                prodname.get(), categ.get(), amt.get(), pd.get())
+            resp = execute_query(q)
 
+            pid.pack_forget()
+            pd.pack_forget()
+            pn.pack_forget()
+            prodname.pack_forget()
+            cat.pack_forget()
+            category.pack_forget()
+            at.pack_forget()
+            amt.pack_forget()
+            sub.pack_forget()
+            success = Label(update, text = "Data Updated Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+
+        c.pack_forget()
+        p.pack_forget()
+        try:
+            l.pack_forget()
+        except:
+            pass
+        pid = Label(update, text = "Product ID", font = "Arial 20 bold", bg = "#090c39", fg = "white")
+        pid.pack(padx = 30, pady = 20)
+        pd = Entry(update, font = "Arial 20 bold")
+        pd.pack(padx = 0, pady = 0)
+        pn = Label(update, text="Product Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        pn.pack(padx = 30, pady = 20)
+        prodname = Entry(update, font = "Arial 20 bold")
+        prodname.pack(padx = 0, pady= 0)
+        cat = Label(update, text="Category", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        cat.pack(padx = 30, pady = 20)
+        category = OptionMenu(update, categ, *cats)
+        category.config(font=("Arial", 22))
+        category.pack(padx = 0,pady= 0)
+        at = Label(update, text="Price", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        at.pack(padx = 30, pady = 20)
+        amt = Entry(update, font = "Arial 20 bold")
+        amt.pack(padx = 0,pady= 0)
+        sub = Button(update, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
+        
     Label(update, text="Update Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
-    c = Button(update, text = "New Customer", font = "Arial 20 bold", bg = "white", command = cust_det)
+    c = Button(update, text = "Customer Details", font = "Arial 20 bold", bg = "white", command = cust_det)
     c.pack(pady=40)
-    p = Button(update, text = "New Product", font = "Arial 20 bold", bg = "white", command = new_prod)
+    p = Button(update, text = "Product Details", font = "Arial 20 bold", bg = "white", command = prod_det)
     p.pack(pady=40)
-    o = Button(update, text = "New Order", font = "Arial 20 bold", bg = "white", command = new_order)
-    o.pack(pady=1)
     Button(update, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(update, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(update, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
