@@ -81,7 +81,7 @@ def home_window():
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=15)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=15)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=15)
-    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=maintain).pack(pady=15)
+    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=accounts_window).pack(pady=15)
     Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=switchab).pack(pady=15)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
@@ -575,7 +575,70 @@ def update_window():
     Button(update, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(update, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     update.mainloop()
-    
+
+#Function to create Accounts Page
+def accounts_window():
+    account = Tk()
+    screen_width = account.winfo_screenwidth()
+    screen_height = account.winfo_screenheight()
+    account.title("Manage Accounts")
+    account.attributes("-fullscreen", True)
+
+    img = Image.open("images/accounts.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x=-2, y=-2)
+
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            account.destroy()
+
+    def maintain():
+        global l, maintain_label
+        if not maintain_label:
+            l = Label(account, text="Feature Under Development", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            maintain_label = True
+
+    def ad():
+        account.destroy()
+        accounts_window()
+
+    def switchh():
+        account.destroy()
+        home_window()
+
+    def change_pwd():
+        uname = simpledialog.askstring(title="Enter Values",prompt="Username")
+        try:
+            opwd = SecuriPy.Text.decrypt(execute_query("select password from users where username = '{}'".format(uname))[0][0], "datasense")
+            chkopwd = simpledialog.askstring(title="Enter Values",prompt="Old Password")
+            if opwd == chkopwd:
+                npwd = simpledialog.askstring(title="Enter Values",prompt="New Password")
+                chknpwd = simpledialog.askstring(title="Enter Values",prompt="Retype New Password")
+                if npwd == chknpwd:
+                    execute_query("update users set password = '{}' where username = '{}'".format(npwd, uname))
+                else:
+                    messagebox.showinfo("Error", "Passwords Don't Match")
+            else:
+                messagebox.showinfo("Error", "Invalid Inputs")
+                messagebox.showinfo("Information", "Retry Again")
+        except IndexError:
+            messagebox.showinfo("Information", "No Account Found")
+            
+    Label(account, text="Manage Accounts", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
+    c = Button(account, text = "Change Password", font = "Arial 20 bold", bg = "white", command = change_pwd)
+    c.pack(pady=40)
+    p = Button(account, text = "Delete Account", font = "Arial 20 bold", bg = "white", command = maintain)
+    p.pack(pady=40)
+    Button(account, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(account, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
+    Button(account, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
+
+    account.mainloop()
 #Function to create a Welcome page
 def welcome_window():
     welcome = Tk()
