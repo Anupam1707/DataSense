@@ -1,3 +1,4 @@
+#Windows
 """This is the backbone of the App. This program creates a link between the front end and the back-end."""
 import SecuriPy
 from tkinter import *
@@ -74,7 +75,7 @@ def home_window():
         home.destroy()
         welcome_window()
         
-    Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
+    Label(home, text = "Welcome to Dat+++++++++a Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=15)
     Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=update_window).pack(pady=15)
     Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=15)
@@ -212,7 +213,7 @@ def login_window():
             else:
                 error_label = Label(login, text="Incorrect username or password",font = "Arial 30", fg="red")
                 error_label.pack()
-            log(username_entry.get() + " " + "logged in")
+            log(str(username_entry.get()) + " " + "logged in")
         except IndexError:
             global a, acc
             if not acc:
@@ -578,11 +579,11 @@ def update_window():
 
 #Function to create Accounts Page
 def accounts_window():
-    account = Tk()
-    screen_width = account.winfo_screenwidth()
-    screen_height = account.winfo_screenheight()
-    account.title("Manage Accounts")
-    account.attributes("-fullscreen", True)
+    accounts = Tk()
+    screen_width = accounts.winfo_screenwidth()
+    screen_height = accounts.winfo_screenheight()
+    accounts.title("Manage Accounts")
+    accounts.attributes("-fullscreen", True)
 
     img = Image.open("images/accounts.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
@@ -594,17 +595,10 @@ def accounts_window():
     def quit():
         result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
         if result == True:
-            account.destroy()
-
-    def maintain():
-        global l, maintain_label
-        if not maintain_label:
-            l = Label(account, text="Feature Under Development", font="Arial 30 bold", bg="red", fg="black")
-            l.pack(side = BOTTOM, anchor="s")
-            maintain_label = True
+            accounts.destroy()
 
     def ad():
-        account.destroy()
+        accounts.destroy()
         accounts_window()
 
     def switchh():
@@ -612,15 +606,18 @@ def accounts_window():
         home_window()
 
     def change_pwd():
-        uname = simpledialog.askstring(title="Enter Values",prompt="Username")
+        uname = simpledialog.askstring(title="Enter Values",prompt="Enter your Username")
         try:
-            opwd = SecuriPy.Text.decrypt(execute_query("select password from users where username = '{}'".format(uname))[0][0], "datasense")
-            chkopwd = simpledialog.askstring(title="Enter Values",prompt="Old Password")
+            opwd = SecuriPy.Text.decrypt(execute_query("select password from users where username = '{}'".format(
+                SecuriPy.Text.encrypt(uname, "datasense")))[0][0], "datasense")
+            chkopwd = simpledialog.askstring(title="Enter Values",prompt="Enter Old Password", show = "*")
             if opwd == chkopwd:
-                npwd = simpledialog.askstring(title="Enter Values",prompt="New Password")
-                chknpwd = simpledialog.askstring(title="Enter Values",prompt="Retype New Password")
+                npwd = simpledialog.askstring(title="Enter Values",prompt="Enter New Password", show = "*")
+                chknpwd = simpledialog.askstring(title="Enter Values",prompt="Retype New Password", show = "*")
                 if npwd == chknpwd:
-                    execute_query("update users set password = '{}' where username = '{}'".format(npwd, uname))
+                    execute_query("update users set password = '{}' where username = '{}'".format(
+                        SecuriPy.Text.encrypt(npwd, "datasense"), SecuriPy.Text.encrypt(uname, "datasense")))
+                    messagebox.showinfo("Information", "Password Successfully Updated!")
                 else:
                     messagebox.showinfo("Error", "Passwords Don't Match")
             else:
@@ -629,16 +626,70 @@ def accounts_window():
         except IndexError:
             messagebox.showinfo("Information", "No Account Found")
             
-    Label(account, text="Manage Accounts", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
-    c = Button(account, text = "Change Password", font = "Arial 20 bold", bg = "white", command = change_pwd)
+    def delete_acc():
+        uname = simpledialog.askstring(title="Enter Values",prompt="Enter your Username")
+        try:
+            pwd = SecuriPy.Text.decrypt(execute_query("select password from users where username = '{}'".format(
+                SecuriPy.Text.encrypt(uname, "datasense")))[0][0], "datasense")
+            chkpwd = simpledialog.askstring(title="Enter Values",prompt="Enter the Password", show = "*")
+            if pwd == chkpwd:
+                execute_query("delete from users where username = '{}'".format(SecuriPy.Text.encrypt(uname, "datasense")))
+                messagebox.showinfo("Information", "Account Successfully Deleted!")
+            else:
+                messagebox.showinfo("Error", "Incorrect Password")
+                messagebox.showinfo("Information", "Retry Again")
+        except IndexError:
+            messagebox.showinfo("Information", "No Account Found")
+            
+    Label(accounts, text="Manage Accounts", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
+    c = Button(accounts, text = "Change Password", font = "Arial 20 bold", bg = "white", command = change_pwd)
     c.pack(pady=40)
-    p = Button(account, text = "Delete Account", font = "Arial 20 bold", bg = "white", command = maintain)
+    p = Button(accounts, text = "Delete Account", font = "Arial 20 bold", bg = "white", command = delete_acc)
     p.pack(pady=40)
-    Button(account, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
-    Button(account, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
-    Button(account, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
+    Button(accounts, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(accounts, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
+    Button(accounts, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
+    accounts.mainloop()
 
-    account.mainloop()
+def delete_window():
+    delete = Tk()
+    screen_width = delete.winfo_screenwidth()
+    screen_height = delete.winfo_screenheight()
+    delete.title("Welcome to DataSense")
+    delete.attributes("-fullscreen", True)
+
+    img = Image.open("images/delete.jpg")
+    img = img.resize((screen_width,screen_height), Image.LANCZOS)
+    test = ImageTk.PhotoImage(img)
+    bk = Label(image=test)
+    bk.image = test
+    bk.place(x=-2, y=-2)
+
+    def quit():
+        result = messagebox.askyesno("Confirmation", "Are you sure you want to quit?")
+        if result == True:
+            delete.destroy()
+
+    def maintain():
+        global l, maintain_label
+        if not maintain_label:
+            l = Label(delete, text="Feature Under Development", font="Arial 30 bold", bg="red", fg="black")
+            l.pack(side = BOTTOM, anchor="s")
+            maintain_label = True
+
+    def ad():
+        delete.destroy()
+        delete_window()
+
+    def switchh():
+        delete.destroy()
+        home_window()
+        
+    Button(delete, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
+    Button(delete, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
+    Button(delete, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
+    delete.mainloop()
+    
 #Function to create a Welcome page
 def welcome_window():
     welcome = Tk()
@@ -688,6 +739,7 @@ Create and Account today! Already have it? Then Happy Analysis!!")
     Label(welcome, text = "OR", font = ("MV Boli", 30)).pack(pady = 10, side = LEFT, anchor = "sw")
     Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
+    welcome.mainloop()
     
 #Function to create a Numeric Analysis Page
 def numeric_window():
@@ -1026,7 +1078,6 @@ def export_window():
     def switch():
         export.destroy()
         home_window()
-
     
     def switchh():
         export.destroy()
@@ -1048,7 +1099,8 @@ def export_window():
     Button(export, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")    
     Button(export, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")
     Button(export, text = "Refresh", font = "Arial 20 bold", bg = "red", command = switchh).pack(side = LEFT, anchor = "sw")
-
+    export.mainloop()
+    
 #Function to create a About Page
 def about_window():
     about = Tk()
