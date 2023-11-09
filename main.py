@@ -27,3 +27,4 @@ except FileNotFoundError:
     from visuals import *
     from windows import *
     welcome_window()
+    

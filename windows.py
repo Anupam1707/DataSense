@@ -75,7 +75,7 @@ def home_window():
         home.destroy()
         welcome_window()
         
-    Label(home, text = "Welcome to Dat+++++++++a Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
+    Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=15)
     Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=update_window).pack(pady=15)
     Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=15)
