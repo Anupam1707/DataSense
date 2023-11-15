@@ -29,6 +29,13 @@ from PIL import Image, ImageTk
 import pandas as pd
 import time
 import datetime
+import mysql.connector
+import pandas as pd
+import datetime
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+import random
+
 
 maintain_label = False
 acc = False
@@ -206,11 +213,6 @@ except FileNotFoundError:
 
 
 #SQL Scripts
-import mysql.connector
-import pandas as pd
-import datetime
-from tkinter import messagebox
-
 with open("creds.tiak") as f:
         creds = f.read()
         creds = creds.split(",")
@@ -546,9 +548,6 @@ def prod_qty():
 
 
 #Visuals
-import matplotlib.pyplot as plt
-import random
-
 # Function to create and show a bar chart (horizontal or vertical) using .show()
 def bar_chart(x_values, y_values, x_axis_label, y_axis_label, title, orientation='vertical'):
     color = ['#{:02x}{:02x}{:02x}'.format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for i in x_values]
@@ -576,6 +575,38 @@ def pie_chart(labels, sizes, title):
 
     plt.show()
 
+
+#Function to plot graphs and create graphing window
+def plot(xvals=None, yvals=None, t=""):
+    if xvals is not None and yvals is not None:
+        x = xvals
+        y = yvals
+    else:
+        x = []
+        y = []
+
+        g = gra.get()
+        t = typ.get()
+
+        if g == "total_sales_cat":
+            d = total_sales_cat()
+        elif g == "total_sales_date":
+            d = total_sales_date()
+        elif g == "percent_total_sales_cat":
+            d = percent_total_sales_cat()
+        elif g == "prod_qty":
+            d = prod_qty()
+
+        for i in d:
+            x.append(i[0])
+            y.append(float(i[1]))
+
+    if t == "horizontal bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
+    elif t == "vertical bar graph":
+        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
+    elif t == "pie chart":
+        pie_chart(x, y, "Visual Analysis\nPie Chart")
 
 # In[ ]:
 
@@ -634,18 +665,21 @@ def home_window():
     def switchdel():
         home.destroy()
         delete_window()
+    def switchacc():
+        home.destroy()
+        accounts_window()
     def logout():
         home.destroy()
         welcome_window()
         
     Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=15)
-    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=update_window).pack(pady=15)
-    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=15)
+    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=switchu).pack(pady=15)
+    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=switchdel).pack(pady=15)
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=15)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=15)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=15)
-    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=accounts_window).pack(pady=15)
+    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=switchacc).pack(pady=15)
     Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=switchab).pack(pady=15)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
@@ -939,10 +973,10 @@ def add_window():
             ords = execute_query("select orderdetailid from orderdetails")
             lord = ords[-1][0]
             stt = float(prodprice[products.index(prod.get()) ][1]) * float(qt.get())
-            q = "insert into orders values ({}, {}, '{}', {})".format(lor+1, (customers.index(cust.get())+1), date.get(), stt)
-            resp = execute_query(q)
-            q = "insert into orderdetails values ({}, {}, {}, {}, {})".format(lord + 1, lor+1, (products.index(prod.get())+1), qt.get(), stt)
-            resp = execute_query(q)
+            query = "insert into orders values ({}, {}, '{}', {})".format(lor+1, (customers.index(cust.get())+1), date.get(), stt)
+            resp = execute_query(query)
+            query = "insert into orderdetails values ({}, {}, {}, {}, {})".format(lord+1, lor+1, (products.index(prod.get())+1), qt.get(), stt)
+            resp = execute_query(query)
             cn.pack_forget()
             customer.pack_forget()
             pd.pack_forget()
@@ -994,9 +1028,9 @@ def add_window():
     c = Button(add, text = "New Customer", font = "Arial 20 bold", bg = "white", command = new_cust)
     c.pack(pady=40)
     p = Button(add, text = "New Product", font = "Arial 20 bold", bg = "white", command = new_prod)
-    p.pack(pady=40)
+    p.pack(pady=0)
     o = Button(add, text = "New Order", font = "Arial 20 bold", bg = "white", command = new_order)
-    o.pack(pady=1)
+    o.pack(pady=40)
     Button(add, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(add, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
@@ -1251,6 +1285,89 @@ def delete_window():
     delete.title("Welcome to DataSense")
     delete.attributes("-fullscreen", True)
 
+    def del_prod():
+        global maintain_label
+        maintain_label = False
+        def submit_data():
+            q = "delete from products where name ProductName = '{}'".format(prodname.get())
+            resp = execute_query(q)
+
+            pn.pack_forget()
+            prodname.pack_forget()
+            success = Label(delete, text = "Data Deleted Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+
+        c.pack_forget()
+        p.pack_forget()
+        o.pack_forget()
+        try:
+            l.pack_forget()
+        except:
+            pass
+        pn = Label(delete, text="Product Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        pn.pack(padx = 30, pady = 20)
+        prodname = Entry(delete, font = "Arial 20 bold")
+        prodname.pack(padx = 0, pady= 0)
+        sub = Button(delete, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
+
+    def del_cust():
+        global maintain_label
+        maintain_label = False
+        def submit_data():
+            q = "delete from customers where FirstName = '{}' and where LastName = '{}'".format(firstname.get(), lastname.get())
+            resp = execute_query(q)
+
+            fn.pack_forget()
+            firstname.pack_forget()
+            ln.pack_forget()
+            lastname.pack_forget()
+
+            success = Label(delete, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+            
+        c.pack_forget()
+        p.pack_forget()
+        o.pack_forget()
+        try:
+            l.pack_forget()
+        except:
+            pass
+        fn = Label(delete, text="First Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        fn.pack(padx = 30, pady = 20)
+        firstname = Entry(delete, font = "Arial 20 bold")
+        firstname.pack(padx = 0, pady= 0)
+        ln = Label(delete, text="Last Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        ln.pack(padx = 30, pady = 20)
+        lastname = Entry(delete, font = "Arial 20 bold")
+        lastname.pack(padx = 0,pady= 0)
+        sub = Button(delete, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
+
+    def del_order():
+        global maintain_label
+        maintain_label = False
+        
+        def submit_data():
+            query = "delete from orders where OrderID = {}".format(orderid.get())
+            resp = execute_query(query)
+            query = "delete from orderdetails where OrderID = {}".format(orderid.get())
+            resp = execute_query(query)
+            oid.pack_forget()
+            orderid.pack_forget()
+            success = Label(delete, text = "Data Entered Successfully", font = "Arial 40 bold", bg = "#090c39", fg = "white")
+            success.pack(anchor = CENTER)
+            
+        c.pack_forget()
+        p.pack_forget()
+        o.pack_forget()
+        oid = Label(delete, text="Customer Name", font = "Arial 20 bold",bg = "#090c39", fg = "white")
+        oid.pack(padx = 30, pady = 20)
+        orderid = Entry(delete, font = "Arial 20 bold")
+        orderid.pack(padx = 0, pady= 0)
+        sub = Button(delete, text = "Submit", font = "Arial 20 bold", bg = "blue", fg = "white", command = submit_data)
+        sub.pack(pady=5)
+
     img = Image.open("images/delete.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
     test = ImageTk.PhotoImage(img)
@@ -1277,7 +1394,14 @@ def delete_window():
     def switchh():
         delete.destroy()
         home_window()
-        
+
+    Label(delete, text="Delete Data", font = "Arial 40 bold",bg = "#090c39", fg = "white").pack(pady = 50)
+    c = Button(delete, text = "New Customer", font = "Arial 20 bold", bg = "white", command = del_cust)
+    c.pack(pady=40)
+    p = Button(delete, text = "New Product", font = "Arial 20 bold", bg = "white", command = del_prod)
+    p.pack(pady=0)
+    o = Button(delete, text = "New Order", font = "Arial 20 bold", bg = "white", command = del_order)
+    o.pack(pady=40)
     Button(delete, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(delete, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(delete, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
@@ -1566,40 +1690,8 @@ def numeric_window():
     numeric.mainloop()
 
 
-# In[ ]:
+# In[ ]
 
-
-#Function to plot graphs and create graphing window
-def plot(xvals=None, yvals=None, t=""):
-    if xvals is not None and yvals is not None:
-        x = xvals
-        y = yvals
-    else:
-        x = []
-        y = []
-
-        g = gra.get()
-        t = typ.get()
-
-        if g == "total_sales_cat":
-            d = total_sales_cat()
-        elif g == "total_sales_date":
-            d = total_sales_date()
-        elif g == "percent_total_sales_cat":
-            d = percent_total_sales_cat()
-        elif g == "prod_qty":
-            d = prod_qty()
-
-        for i in d:
-            x.append(i[0])
-            y.append(float(i[1]))
-
-    if t == "horizontal bar graph":
-        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
-    elif t == "vertical bar graph":
-        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
-    elif t == "pie chart":
-        pie_chart(x, y, "Visual Analysis\nPie Chart")
 
 #Function to create a Visual Analysis Page
 def graph_window():

@@ -71,24 +71,27 @@ def home_window():
     def switchdel():
         home.destroy()
         delete_window()
+    def switchacc():
+        home.destroy()
+        accounts_window()
     def logout():
         home.destroy()
         welcome_window()
         
     Label(home, text = "Welcome to Data Sense", font = "Arial 40 bold", bg = "black", fg = "white").pack()
     Button(home, text = "Add Data", font = "Arial 20 bold", bg="white", command=switcha).pack(pady=15)
-    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=update_window).pack(pady=15)
-    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=maintain).pack(pady=15)
+    Button(home, text = "Update Data", font = "Arial 20 bold", bg="white", command=switchu).pack(pady=15)
+    Button(home, text = "Delete Data", font = "Arial 20 bold", bg="white", command=switchdel).pack(pady=15)
     Button(home, text = 'Visual Analysis', font = 'Arial 20 bold', bg='white', command=switchg).pack(pady=15)
     Button(home, text = 'Numeric Analysis', font = 'Arial 20 bold', bg='white', command=switchn).pack(pady=15)
     Button(home, text = "Export Reports", font = "Arial 20 bold", bg = "white", command=switche).pack(pady=15)
-    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=accounts_window).pack(pady=15)
+    Button(home, text = "Manage Accounts", font = "Arial 20 bold", bg = "white", command=switchacc).pack(pady=15)
     Button(home, text = "About", font = "Arial 20 bold",bg = "white", command=switchab).pack(pady=15)
     Button(home, text = 'Exit', font = 'Arial 20 bold', bg='red', command=quit).pack(side = RIGHT,anchor = "se")
     Button(home, text = 'Log Out', font = 'Arial 20 bold', bg='red', command=logout).pack(side = LEFT,anchor = "sw")
     
     home.mainloop()
-    
+
 #Function to create a Signup Page
 def signup_window():
     global maintain_label
@@ -158,7 +161,7 @@ def signup_window():
     Button(signup, text = 'Exit', font = 'Arial 20 bold', bg='red', command=signup.destroy).pack(side = RIGHT,anchor = "se")
     Button(signup, text = 'Go Back', font = 'Arial 20 bold', bg='red', command=switchlog).pack(side = LEFT,anchor = "sw")
     signup.mainloop()
- 
+
 #Function to create a Login Page
 def login_window():
     global maintain_label
@@ -364,10 +367,10 @@ def add_window():
             ords = execute_query("select orderdetailid from orderdetails")
             lord = ords[-1][0]
             stt = float(prodprice[products.index(prod.get()) ][1]) * float(qt.get())
-            q = "insert into orders values ({}, {}, '{}', {})".format(lor+1, (customers.index(cust.get())+1), date.get(), stt)
-            resp = execute_query(q)
-            q = "insert into orderdetails values ({}, {}, {}, {}, {})".format(lord + 1, lor+1, (products.index(prod.get())+1), qt.get(), stt)
-            resp = execute_query(q)
+            query = "insert into orders values ({}, {}, '{}', {})".format(lor+1, (customers.index(cust.get())+1), date.get(), stt)
+            resp = execute_query(query)
+            query = "insert into orderdetails values ({}, {}, {}, {}, {})".format(lord+1, lor+1, (products.index(prod.get())+1), qt.get(), stt)
+            resp = execute_query(query)
             cn.pack_forget()
             customer.pack_forget()
             pd.pack_forget()
@@ -426,7 +429,7 @@ def add_window():
     Button(add, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(add, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     add.mainloop()
-    
+
 #Function to create a Window to Update Data
 def update_window():
     update = Tk()
@@ -597,12 +600,15 @@ def accounts_window():
         if result == True:
             accounts.destroy()
 
+    def welcome():
+        accounts.destroy()
+        welcome_window()
     def ad():
         accounts.destroy()
         accounts_window()
 
     def switchh():
-        account.destroy()
+        accounts.destroy()
         home_window()
 
     def change_pwd():
@@ -635,6 +641,7 @@ def accounts_window():
             if pwd == chkpwd:
                 execute_query("delete from users where username = '{}'".format(SecuriPy.Text.encrypt(uname, "datasense")))
                 messagebox.showinfo("Information", "Account Successfully Deleted!")
+                welcome()
             else:
                 messagebox.showinfo("Error", "Incorrect Password")
                 messagebox.showinfo("Information", "Retry Again")
@@ -651,6 +658,7 @@ def accounts_window():
     Button(accounts, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     accounts.mainloop()
 
+#Function to create Window to Delete Data
 def delete_window():
     delete = Tk()
     screen_width = delete.winfo_screenwidth()
@@ -689,7 +697,7 @@ def delete_window():
     Button(delete, text = 'Home', font = 'Arial 20 bold', bg='red', command=switchh).pack(side = LEFT,anchor = "sw")
     Button(delete, text = "Back", font = "Arial 20 bold", bg = "red", command = ad).pack(side = LEFT,anchor = "sw")
     delete.mainloop()
-    
+
 #Function to create a Welcome page
 def welcome_window():
     welcome = Tk()
@@ -740,7 +748,7 @@ Create and Account today! Already have it? Then Happy Analysis!!")
     Button(welcome, text = "Login", font = "Arial 30 bold", command=switchl).pack(side = LEFT, anchor = "sw")
     Button(welcome, text = "Exit", font = "Arial 30 bold", bg = "red", fg = "black", command=quit).pack(side = RIGHT, anchor = "se")
     welcome.mainloop()
-    
+
 #Function to create a Numeric Analysis Page
 def numeric_window():
     numeric = Tk()
@@ -963,38 +971,6 @@ def numeric_window():
     disp.pack(side = BOTTOM, anchor= "s",pady = 30)
     
     numeric.mainloop()
-    
-#Function to plot graphs
-def plot(xvals=None, yvals=None, t=""):
-    if xvals is not None and yvals is not None:
-        x = xvals
-        y = yvals
-    else:
-        x = []
-        y = []
-
-        g = gra.get()
-        t = typ.get()
-
-        if g == "total_sales_cat":
-            d = total_sales_cat()
-        elif g == "total_sales_date":
-            d = total_sales_date()
-        elif g == "percent_total_sales_cat":
-            d = percent_total_sales_cat()
-        elif g == "prod_qty":
-            d = prod_qty()
-
-        for i in d:
-            x.append(i[0])
-            y.append(float(i[1]))
-
-    if t == "horizontal bar graph":
-        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nHorizontal Chart", "horizontal")
-    elif t == "vertical bar graph":
-        bar_chart(x, y, "X-Axis", "Y-Axis", "Visual Analysis\nVertical Chart", "vertical")
-    elif t == "pie chart":
-        pie_chart(x, y, "Visual Analysis\nPie Chart")
 
 #Function to create a Visual Analysis Page
 def graph_window():
@@ -1100,7 +1076,7 @@ def export_window():
     Button(export, text = 'Home', font = 'Arial 20 bold', bg='red', command=switch).pack(side = LEFT,anchor = "sw")
     Button(export, text = "Refresh", font = "Arial 20 bold", bg = "red", command = switchh).pack(side = LEFT, anchor = "sw")
     export.mainloop()
-    
+
 #Function to create a About Page
 def about_window():
     about = Tk()
