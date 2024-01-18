@@ -259,6 +259,9 @@ except FileNotFoundError:
 
 
 #Gather Resourses 
+os.system("mkdir assets")
+images = ["accounts.jpg", "add.jpg", "delete.jpg", "export.jpg", "fig1.png", "home.jpg", "login.jpg", "numeric.jpg", "signup.jpg", "update.jpg", "visual.jpg", "welcome.jpg"]
+
 def download(file):
     try:
         imd = BytesIO(fetch(f"images/{file}", "ds", image = True))
@@ -268,14 +271,10 @@ def download(file):
         print("Failed")
         download(file)
         
-if not error:
-    os.system("mkdir assets")
-    images = ["accounts.jpg", "add.jpg", "delete.jpg", "export.jpg", "fig1.png", "home.jpg", "login.jpg", "numeric.jpg", "signup.jpg", "update.jpg", "visual.jpg", "welcome.jpg"]
+for i in range(len(images)):
+    download(images[i])
 
-    for i in range(len(images)):
-        download(images[i])
-    
-    messagebox.showinfo("Information", "Resources Collected Successfully!")
+messagebox.showinfo("Information", "Resources Collected Successfully!")
 
 
 # In[ ]:
@@ -1261,7 +1260,7 @@ def update_window():
 
 
 # In[ ]:
-
+ 
 
 #Function to create Accounts Page
 def accounts_window():
@@ -1271,7 +1270,7 @@ def accounts_window():
     accounts.title("Manage Accounts")
     accounts.attributes("-fullscreen", True)
 
-    img = Image.open("aaccounts.jpg")
+    img = Image.open("assets/accounts.jpg")
     img = img.resize((screen_width,screen_height), Image.LANCZOS)
     test = ImageTk.PhotoImage(img)
     bk = Label(image=test)
