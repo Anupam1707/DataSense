@@ -259,9 +259,6 @@ except FileNotFoundError:
 
 
 #Gather Resourses 
-os.system("mkdir assets")
-images = ["accounts.jpg", "add.jpg", "delete.jpg", "export.jpg", "fig1.png", "home.jpg", "login.jpg", "numeric.jpg", "signup.jpg", "update.jpg", "visual.jpg", "welcome.jpg"]
-
 def download(file):
     try:
         imd = BytesIO(fetch(f"images/{file}", "ds", image = True))
@@ -271,10 +268,15 @@ def download(file):
         print("Failed")
         download(file)
         
-for i in range(len(images)):
-    download(images[i])
+if not error:
+    os.system("mkdir assets")
+    images = ["accounts.jpg", "add.jpg", "delete.jpg", "export.jpg", "fig1.png", "home.jpg", "login.jpg", "numeric.jpg", "signup.jpg", 
+              "update.jpg", "visual.jpg", "welcome.jpg"]
 
-messagebox.showinfo("Information", "Resources Collected Successfully!")
+    for i in range(len(images)):
+        download(images[i])
+    
+    messagebox.showinfo("Information", "Resources Collected Successfully!")
 
 
 # In[ ]:
@@ -979,7 +981,8 @@ def add_window():
             r = execute_query("select customerid from customers")
             idl = r[-1][0]
             print(idl+1, firstname.get(), lastname.get(), email.get(), address.get())
-            q = "insert into customers values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), email.get(), address.get())
+            q = "insert into customers values ({}, '{}', '{}', '{}', '{}')".format(idl + 1, firstname.get(), lastname.get(), 
+                                                                                   email.get(), address.get())
             resp = execute_query(q)
 
             fn.pack_forget()
@@ -1260,7 +1263,7 @@ def update_window():
 
 
 # In[ ]:
- 
+
 
 #Function to create Accounts Page
 def accounts_window():
@@ -1741,12 +1744,13 @@ def numeric_window():
 
     Label(numeric, text='Numeric Analysis', font='Arial 35 bold', bg='#7676EE').pack(pady = 20)
 
-    bts = ["Customer Details", "Customer Total Spent", "Customer Highest Spent", "Order Details", "Orders by Date", "Orders between Dates", "Orders by Date and Category",
-           "Customer Orders", "Customer Orders Count", "Products", "Categories", "Products in a Category",
-           "Revenue by Product", "High Priced Product", "Average Product Price", "Revenue by Category"]
+    bts = ["Customer Details", "Customer Total Spent", "Customer Highest Spent", "Order Details", "Orders by Date", 
+           "Orders between Dates", "Orders by Date and Category","Customer Orders", "Customer Orders Count", 
+           "Products", "Categories", "Products in a Category","Revenue by Product", "High Priced Product", 
+           "Average Product Price", "Revenue by Category"]
     
-    coms = [custs, custtspent, hspentcust, ordet, dtord, ordrng, dtcatord, custordet, custorcnt, cat_prods, prod_cats, cat_prods_cat, treveprod,
-            highpprod, avgpricat, revcat]
+    coms = [custs, custtspent, hspentcust, ordet, dtord, ordrng, dtcatord, custordet, custorcnt, cat_prods,
+            prod_cats, cat_prods_cat, treveprod, highpprod, avgpricat, revcat]
     buttons = [Button(numeric, text=text, command=func) for text, func in zip(bts, coms)]
     for button in buttons:
         button.pack()
@@ -1968,3 +1972,4 @@ if not error:
     welcome_window()
 else:
     messagebox.showerror("Setup Error", "App setup unsuccessful.\nCheck your inputs and try again.")
+
